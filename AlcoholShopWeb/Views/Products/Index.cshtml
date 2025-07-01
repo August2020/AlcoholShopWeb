@@ -1,0 +1,19 @@
+﻿@model IEnumerable<AlcoholShopWeb.Models.Product>
+
+<h2>Nasze alkohole</h2>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p>@item.Description</p>
+                    <p><strong>@item.Price zł</strong></p>
+                    <a asp-action="Details" asp-route-id="@item.ProductID" class="btn btn-info">Szczegóły</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

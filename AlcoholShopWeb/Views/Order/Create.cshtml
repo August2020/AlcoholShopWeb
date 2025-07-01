@@ -1,0 +1,44 @@
+﻿@model AlcoholShopWeb.Models.Order
+
+@{
+    ViewData["Title"] = "Zamówienie";
+}
+
+<h1>Podsumowanie zamówienia</h1>
+
+<form asp-action="Confirm" method="post">
+    <input type="hidden" asp-for="UserID" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" required />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" type="email" class="form-control" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DeliveryMethodID" class="form-label"></label>
+        <select asp-for="DeliveryMethodID" class="form-select" asp-items="ViewBag.DeliveryMethods"></select>
+        <span asp-validation-for="DeliveryMethodID" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PaymentMethodID" class="form-label"></label>
+        <select asp-for="PaymentMethodID" class="form-select" asp-items="ViewBag.PaymentMethods"></select>
+        <span asp-validation-for="PaymentMethodID" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Zamów</button>
+    <a asp-controller="Cart" asp-action="Index" asp-route-userId="@Model.UserID" class="btn btn-secondary">Powrót do koszyka</a>
+</form>

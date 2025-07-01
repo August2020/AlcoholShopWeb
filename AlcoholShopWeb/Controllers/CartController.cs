@@ -1,46 +1,33 @@
-﻿using AlcoholShop.Data;
-using AlcoholShop.Models;
+﻿using AlcoholShop.Models;
+using AlcoholShopWeb.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace AlcoholShop.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CartController : ControllerBase
+    public class CartController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AlcoholShopContext _context;
 
-        public CartController(AppDbContext context)
+        public CartController(AlcoholShopContext context)
         {
             _context = context;
         }
 
-        // GET: api/Cart/{userId}
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<Cart>> GetCart(int userId)
+        public async Task<IActionResult> Index(int userId)
         {
             var cart = await _context.Carts
                 .Include(c => c.CartItems)
                 .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return cart;
+            return View(cart);
         }
 
-        // POST: api/Cart/AddItem
-        [HttpPost("AddItem")]
-        public async Task<ActionResult> AddItem(int userId, int productId, int quantity)
+        [HttpPost]
+        public async Task<IActionResult> AddItem(int userId, int productId, int quantity)
         {
-            if (quantity < 1)
-                return BadRequest("Quantity must be at least 1.");
-
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
@@ -50,65 +37,59 @@ namespace AlcoholShop.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var cartItem = await _context.CartItems
+            var item = await _context.CartItems
                 .FirstOrDefaultAsync(i => i.CartId == cart.CartId && i.ProductId == productId);
 
-            if (cartItem != null)
+            if (item != null)
             {
-                cartItem.Quantity += quantity;
+                item.Quantity += quantity;
             }
             else
             {
-                cartItem = new CartItem
-                {
-                    CartId = cart.CartId,
-                    ProductId = productId,
-                    Quantity = quantity
-                };
-                _context.CartItems.Add(cartItem);
+                item = new CartItem { CartId = cart.CartId, ProductId = productId, Quantity = quantity };
+                _context.CartItems.Add(item);
             }
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return RedirectToAction("Index", new { userId });
         }
 
-        // DELETE: api/Cart/RemoveItem
-        [HttpDelete("RemoveItem")]
-        public async Task<ActionResult> RemoveItem(int userId, int productId)
+        [HttpPost]
+        public async Task<IActionResult> RemoveItem(int userId, int productId)
         {
             var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (cart == null)
-                return NotFound();
+            if (cart != null)
+            {
+                var item = await _context.CartItems
+                    .FirstOrDefaultAsync(i => i.CartId == cart.CartId && i.ProductId == productId);
 
-            var cartItem = await _context.CartItems
-                .FirstOrDefaultAsync(i => i.CartId == cart.CartId && i.ProductId == productId);
+                if (item != null)
+                {
+                    _context.CartItems.Remove(item);
+                    await _context.SaveChangesAsync();
+                }
+            }
 
-            if (cartItem == null)
-                return NotFound();
-
-            _context.CartItems.Remove(cartItem);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            return RedirectToAction("Index", new { userId });
         }
 
-        // DELETE: api/Cart/ClearCart/{userId}
-        [HttpDelete("ClearCart/{userId}")]
-        public async Task<ActionResult> ClearCart(int userId)
+        [HttpPost]
+        public async Task<IActionResult> ClearCart(int userId)
         {
             var cart = await _context.Carts
                 .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            if (cart == null)
-                return NotFound();
+            if (cart != null)
+            {
+                _context.CartItems.RemoveRange(cart.CartItems);
+                await _context.SaveChangesAsync();
+            }
 
-            _context.CartItems.RemoveRange(cart.CartItems);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            return RedirectToAction("Index", new { userId });
         }
     }
+
 }

@@ -1,0 +1,59 @@
+﻿@model AlcoholShop.Models.Cart
+
+@{
+    ViewData["Title"] = "Koszyk";
+}
+
+<h1>Koszyk</h1>
+
+@if (Model == null || !Model.CartItems.Any())
+{
+    <div class="alert alert-info">Twój koszyk jest pusty.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Produkt</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+                <th>Suma</th>
+                <th>Akcja</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Product.Price.ToString("C")</td>
+                    <td>@item.Quantity</td>
+                    <td>@(item.Product.Price* item.Quantity).ToString("C")</td>
+                    <td>
+                        <form asp-action="RemoveItem" method="post">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="hidden" name="userId" value="@Model.UserId" />
+                            <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h4>Suma: @Model.CartItems.Sum(i => i.Product.Price * i.Quantity).ToString("C")</h4>
+
+        <div>
+            <form asp-action="ClearCart" method="post" class="d-inline">
+                <input type="hidden" name="userId" value="@Model.UserId" />
+                <button type="submit" class="btn btn-warning">Wyczyść koszyk</button>
+            </form>
+
+            <a asp-controller="Order" asp-action="Create" asp-route-userId="@Model.UserId" class="btn btn-success">
+                Przejdź do zamówienia
+            </a>
+        </div>
+    </div>
+}
