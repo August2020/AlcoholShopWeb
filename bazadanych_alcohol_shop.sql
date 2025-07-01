@@ -37,12 +37,12 @@ CREATE TABLE `activeproductsview` (
 -- Zrzut struktury tabela alcoholshop.aging
 CREATE TABLE IF NOT EXISTS `aging` (
   `AgingID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Description` text COLLATE utf8mb4_general_ci,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`AgingID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.aging: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.aging: ~6 rows (około)
 INSERT INTO `aging` (`AgingID`, `Name`, `Description`) VALUES
 	(1, 'Beczka dębowa', 'Starzenie w beczkach dębowych.'),
 	(2, 'Beczka po sherry', 'Starzenie w beczkach po sherry dla dodatkowego aromatu.'),
@@ -54,11 +54,11 @@ INSERT INTO `aging` (`AgingID`, `Name`, `Description`) VALUES
 -- Zrzut struktury tabela alcoholshop.blogcategories
 CREATE TABLE IF NOT EXISTS `blogcategories` (
   `BlogCategoryID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`BlogCategoryID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.blogcategories: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.blogcategories: ~6 rows (około)
 INSERT INTO `blogcategories` (`BlogCategoryID`, `Name`) VALUES
 	(1, 'Poradnik'),
 	(2, 'Nowości'),
@@ -70,8 +70,8 @@ INSERT INTO `blogcategories` (`BlogCategoryID`, `Name`) VALUES
 -- Zrzut struktury tabela alcoholshop.blogposts
 CREATE TABLE IF NOT EXISTS `blogposts` (
   `PostID` int NOT NULL AUTO_INCREMENT,
-  `Title` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `Content` text COLLATE utf8mb4_general_ci NOT NULL,
+  `Title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Blogcategoryid` int DEFAULT NULL,
   `IsPublished` tinyint(1) DEFAULT '1',
   `PublishDate` datetime DEFAULT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `blogposts` (
   CONSTRAINT `blogcategories_ibfk_1` FOREIGN KEY (`Blogcategoryid`) REFERENCES `blogcategories` (`BlogCategoryID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.blogposts: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.blogposts: ~3 rows (około)
 INSERT INTO `blogposts` (`PostID`, `Title`, `Content`, `Blogcategoryid`, `IsPublished`, `PublishDate`, `CreatedAt`) VALUES
 	(1, 'Sztuka degustacji whisky — poradnik dla początkujących', 'Dowiedz się, jak prawidłowo degustować whisky i na co zwracać uwagę podczas próbowania różnych trunków.', 3, 1, '2025-06-15 10:00:00', '2025-06-29 02:21:17'),
 	(2, 'Nowe piwa z Browaru Raciborskiego w naszym sklepie!', 'Z radością informujemy, że do naszej oferty dołączyły klasyczne, twierdzowe i miodowe piwa z Browaru Raciborskiego.', 2, 1, '2025-06-18 12:00:00', '2025-06-29 02:21:17'),
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `blogposttags` (
   CONSTRAINT `blogposttags_ibfk_2` FOREIGN KEY (`TagID`) REFERENCES `blogtags` (`TagID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.blogposttags: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.blogposttags: ~4 rows (około)
 INSERT INTO `blogposttags` (`PostID`, `TagID`) VALUES
 	(1, 1),
 	(2, 2),
@@ -107,11 +107,11 @@ INSERT INTO `blogposttags` (`PostID`, `TagID`) VALUES
 -- Zrzut struktury tabela alcoholshop.blogtags
 CREATE TABLE IF NOT EXISTS `blogtags` (
   `TagID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`TagID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.blogtags: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.blogtags: ~5 rows (około)
 INSERT INTO `blogtags` (`TagID`, `Name`) VALUES
 	(1, 'Poradnik'),
 	(2, 'Wina'),
@@ -150,13 +150,13 @@ CREATE TABLE IF NOT EXISTS `cartitems` (
 -- Zrzut struktury tabela alcoholshop.categories
 CREATE TABLE IF NOT EXISTS `categories` (
   `CategoryID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`CategoryID`),
   UNIQUE KEY `Indeks 2` (`Name`) USING BTREE,
   UNIQUE KEY `UQ_Categories_Name` (`Name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.categories: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.categories: ~11 rows (około)
 INSERT INTO `categories` (`CategoryID`, `Name`) VALUES
 	(9, 'Brandy'),
 	(10, 'Cydr'),
@@ -173,12 +173,12 @@ INSERT INTO `categories` (`CategoryID`, `Name`) VALUES
 -- Zrzut struktury tabela alcoholshop.countries
 CREATE TABLE IF NOT EXISTS `countries` (
   `CountryID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`CountryID`),
   UNIQUE KEY `UQ_Countries_Name` (`Name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.countries: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.countries: ~15 rows (około)
 INSERT INTO `countries` (`CountryID`, `Name`) VALUES
 	(14, 'Australia'),
 	(6, 'Czechy'),
@@ -199,11 +199,11 @@ INSERT INTO `countries` (`CountryID`, `Name`) VALUES
 -- Zrzut struktury tabela alcoholshop.deliverymethods
 CREATE TABLE IF NOT EXISTS `deliverymethods` (
   `DeliveryMethodID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`DeliveryMethodID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.deliverymethods: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.deliverymethods: ~3 rows (około)
 INSERT INTO `deliverymethods` (`DeliveryMethodID`, `Name`) VALUES
 	(1, 'Kurier'),
 	(2, 'Paczkomat'),
@@ -213,8 +213,8 @@ INSERT INTO `deliverymethods` (`DeliveryMethodID`, `Name`) VALUES
 CREATE TABLE IF NOT EXISTS `logs` (
   `LogID` int NOT NULL AUTO_INCREMENT,
   `UserID` int DEFAULT NULL,
-  `Action` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Description` text COLLATE utf8mb4_general_ci,
+  `Action` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`LogID`),
   KEY `UserID` (`UserID`),
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `orderitems` (
   CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.orderitems: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.orderitems: ~3 rows (około)
 INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `Quantity`, `UnitPrice`) VALUES
 	(1, 1, 1, 1, 120.50),
 	(2, 2, 2, 6, 10.50),
@@ -266,9 +266,9 @@ INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `Quantity`, `Un
 CREATE TABLE IF NOT EXISTS `orders` (
   `OrderID` int NOT NULL AUTO_INCREMENT,
   `UserID` int DEFAULT NULL,
-  `Email` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Address` varchar(300) COLLATE utf8mb4_general_ci NOT NULL,
+  `Email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Address` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `StatusID` int NOT NULL,
   `DeliveryMethodID` int NOT NULL,
   `PaymentMethodID` int NOT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`PaymentMethodID`) REFERENCES `paymentmethods` (`PaymentMethodID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.orders: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.orders: ~3 rows (około)
 INSERT INTO `orders` (`OrderID`, `UserID`, `Email`, `Name`, `Address`, `StatusID`, `DeliveryMethodID`, `PaymentMethodID`, `TotalAmount`, `CreatedAt`) VALUES
 	(1, 1, 'jan.kowalski@example.com', 'Jan Kowalski', 'ul. Mickiewicza 10, Warszawa', 1, 1, 1, 120.50, '2025-06-20 10:15:00'),
 	(2, 2, 'anna.nowak@example.com', 'Anna Nowak', 'ul. Piękna 5, Kraków', 2, 2, 2, 240.99, '2025-06-25 14:30:00'),
@@ -294,11 +294,11 @@ INSERT INTO `orders` (`OrderID`, `UserID`, `Email`, `Name`, `Address`, `StatusID
 -- Zrzut struktury tabela alcoholshop.orderstatus
 CREATE TABLE IF NOT EXISTS `orderstatus` (
   `StatusID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`StatusID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.orderstatus: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.orderstatus: ~5 rows (około)
 INSERT INTO `orderstatus` (`StatusID`, `Name`) VALUES
 	(1, 'Nowe'),
 	(2, 'W realizacji'),
@@ -309,11 +309,11 @@ INSERT INTO `orderstatus` (`StatusID`, `Name`) VALUES
 -- Zrzut struktury tabela alcoholshop.paymentmethods
 CREATE TABLE IF NOT EXISTS `paymentmethods` (
   `PaymentMethodID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`PaymentMethodID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.paymentmethods: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.paymentmethods: ~4 rows (około)
 INSERT INTO `paymentmethods` (`PaymentMethodID`, `Name`) VALUES
 	(1, 'Przelew'),
 	(2, 'Karta'),
@@ -323,12 +323,12 @@ INSERT INTO `paymentmethods` (`PaymentMethodID`, `Name`) VALUES
 -- Zrzut struktury tabela alcoholshop.producers
 CREATE TABLE IF NOT EXISTS `producers` (
   `ProducerID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Description` text COLLATE utf8mb4_general_ci,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`ProducerID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.producers: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.producers: ~36 rows (około)
 INSERT INTO `producers` (`ProducerID`, `Name`, `Description`) VALUES
 	(1, 'Browar Raciborski', 'Tradycyjny polski browar z Raciborza.'),
 	(2, 'Jack Daniel\'s', 'Amerykańska destylarnia whisky.'),
@@ -370,12 +370,12 @@ INSERT INTO `producers` (`ProducerID`, `Name`, `Description`) VALUES
 -- Zrzut struktury tabela alcoholshop.productionmethods
 CREATE TABLE IF NOT EXISTS `productionmethods` (
   `ProductionMethodID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Description` text COLLATE utf8mb4_general_ci,
+  `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`ProductionMethodID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.productionmethods: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.productionmethods: ~12 rows (około)
 INSERT INTO `productionmethods` (`ProductionMethodID`, `Name`, `Description`) VALUES
 	(1, 'Destylacja', 'Proces podgrzewania cieczy i kondensacji pary.'),
 	(2, 'Fermentacja', 'Przemiana cukrów w alkohol przy pomocy drożdży.'),
@@ -393,8 +393,8 @@ INSERT INTO `productionmethods` (`ProductionMethodID`, `Name`, `Description`) VA
 -- Zrzut struktury tabela alcoholshop.products
 CREATE TABLE IF NOT EXISTS `products` (
   `ProductID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(200) COLLATE utf8mb4_general_ci NOT NULL,
-  `Description` text COLLATE utf8mb4_general_ci,
+  `Name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `VolumeML` int NOT NULL,
   `AlcoholPercentage` decimal(4,2) NOT NULL,
   `Year` int DEFAULT NULL,
@@ -406,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `CountryID` int DEFAULT NULL,
   `ProductionMethodID` int DEFAULT NULL,
   `AgingID` int DEFAULT NULL,
-  `ImageURL` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ImageURL` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ProductID`),
   UNIQUE KEY `UQ_Products_Name` (`Name`),
@@ -422,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   CONSTRAINT `products_ibfk_5` FOREIGN KEY (`AgingID`) REFERENCES `aging` (`AgingID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.products: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.products: ~28 rows (około)
 INSERT INTO `products` (`ProductID`, `Name`, `Description`, `VolumeML`, `AlcoholPercentage`, `Year`, `AgingDuration`, `Price`, `Availability`, `CategoryID`, `ProducerID`, `CountryID`, `ProductionMethodID`, `AgingID`, `ImageURL`, `CreatedAt`) VALUES
 	(1, 'Piwo Raciborskie Klasyczne', 'Tradycyjne piwo jasne.', 500, 5.00, 2024, NULL, 6.50, 1, 1, 1, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
 	(2, 'Piwo Żywiec Jasne Pełne', 'Klasyczne piwo typu lager.', 500, 5.60, 2024, NULL, 5.90, 1, 1, 2, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
@@ -459,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `ProductID` int NOT NULL,
   `UserID` int NOT NULL,
   `Rating` int DEFAULT NULL,
-  `Comment` text COLLATE utf8mb4_general_ci,
+  `Comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ReviewID`),
   KEY `ProductID` (`ProductID`),
@@ -469,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   CONSTRAINT `reviews_chk_1` CHECK ((`Rating` between 1 and 5))
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.reviews: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.reviews: ~8 rows (około)
 INSERT INTO `reviews` (`ReviewID`, `ProductID`, `UserID`, `Rating`, `Comment`, `CreatedAt`) VALUES
 	(1, 1, 2, 5, 'Rewelacyjne piwo, smak nie do podrobienia!', '2025-06-29 02:25:30'),
 	(2, 6, 2, 4, 'Dobra whisky, choć trochę zbyt dymna dla mnie.', '2025-06-29 02:25:30'),
@@ -483,17 +483,17 @@ INSERT INTO `reviews` (`ReviewID`, `ProductID`, `UserID`, `Rating`, `Comment`, `
 -- Zrzut struktury tabela alcoholshop.users
 CREATE TABLE IF NOT EXISTS `users` (
   `UserID` int NOT NULL AUTO_INCREMENT,
-  `Email` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `PasswordHash` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `Email` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `PasswordHash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `FirstName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `LastName` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `Role` enum('Admin','Client') COLLATE utf8mb4_general_ci NOT NULL,
+  `LastName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `Role` enum('Admin','Client') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Email` (`Email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.users: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.users: ~3 rows (około)
 INSERT INTO `users` (`UserID`, `Email`, `PasswordHash`, `FirstName`, `LastName`, `Role`, `CreatedAt`) VALUES
 	(1, 'jan.kowalski@example.com', 'hashed_password_1', 'Jan', 'Kowalski', 'Client', '2025-06-28 23:29:24'),
 	(2, 'anna.nowak@example.com', 'hashed_password_2', 'Anna', 'Nowak', 'Client', '2025-06-28 23:29:24'),
