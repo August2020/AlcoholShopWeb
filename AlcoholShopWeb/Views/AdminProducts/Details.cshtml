@@ -1,0 +1,23 @@
+@model AlcoholShopWeb.Models.Product
+
+<h2 class="mt-4">Szczegóły produktu: @Model.Name</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Opis</dt>
+    <dd class="col-sm-9">@Model.Description</dd>
+
+    <dt class="col-sm-3">Kategoria</dt>
+    <dd class="col-sm-9">@Model.Category?.Name</dd>
+
+    <dt class="col-sm-3">Producent</dt>
+    <dd class="col-sm-9">@Model.Producer?.Name</dd>
+
+    <dt class="col-sm-3">Cena</dt>
+    <dd class="col-sm-9">@Model.Price zł</dd>
+
+    <dt class="col-sm-3">Dostępność</dt>
+    <dd class="col-sm-9">@(Model.Availability == true ? "Tak" : "Nie")</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.ProductID" class="btn btn-warning">Edytuj</a>
+<a asp-action="Index" class="btn btn-secondary">Powrót</a>

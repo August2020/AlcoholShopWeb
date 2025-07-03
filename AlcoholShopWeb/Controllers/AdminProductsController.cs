@@ -1,8 +1,9 @@
-﻿using AlcoholShopWeb.Data;
-using AlcoholShopWeb.Models;
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AlcoholShopWeb.Data;
+using AlcoholShopWeb.Models;
 
 namespace AlcoholShopWeb.Controllers
 {
@@ -11,26 +12,32 @@ namespace AlcoholShopWeb.Controllers
     {
         private readonly AlcoholShopContext _context;
 
-        public ProducersController(AlcoholShopContext context)
+        public AdminProductsController(AlcoholShopContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Producers.ToListAsync());
+            var products = _context.Products.Include(p => p.Category).Include(p => p.Producer);
+            return View(await products.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
-            var producer = await _context.Producers
-                .FirstOrDefaultAsync(m => m.ProducerID == id);
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Producer)
+                .Include(p => p.Country)
+                .Include(p => p.ProductionMethod)
+                .Include(p => p.Aging)
+                .FirstOrDefaultAsync(m => m.ProductID == id);
 
-            if (producer == null) return NotFound();
+            if (product == null) return NotFound();
 
-            return View(producer);
+            return View(product);
         }
 
         public IActionResult Create()
@@ -40,77 +47,74 @@ namespace AlcoholShopWeb.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProducerID,Name,Description")] Producer producer)
+        public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(producer);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(producer);
+            return View(product);
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var producer = await _context.Producers.FindAsync(id);
-            if (producer == null) return NotFound();
+            var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
 
-            return View(producer);
+            return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProducerID,Name,Description")] Producer producer)
+        public async Task<IActionResult> Edit(int id, Product product)
         {
-            if (id != producer.ProducerID) return NotFound();
+            if (id != product.ProductID) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(producer);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProducerExists(producer.ProducerID))
+                    if (!_context.Products.Any(e => e.ProductID == id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(producer);
+            return View(product);
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var producer = await _context.Producers
-                .FirstOrDefaultAsync(m => m.ProducerID == id);
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Producer)
+                .FirstOrDefaultAsync(m => m.ProductID == id);
 
-            if (producer == null) return NotFound();
+            if (product == null) return NotFound();
 
-            return View(producer);
+            return View(product);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var producer = await _context.Producers.FindAsync(id);
-            _context.Producers.Remove(producer);
+            var product = await _context.Products.FindAsync(id);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProducerExists(int id)
-        {
-            return _context.Producers.Any(e => e.ProducerID == id);
         }
     }
 }

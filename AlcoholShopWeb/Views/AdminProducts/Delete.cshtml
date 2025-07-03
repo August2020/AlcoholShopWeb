@@ -1,0 +1,24 @@
+@model AlcoholShopWeb.Models.Product
+
+<h2 class="mt-4">Usuń produkt</h2>
+
+<div class="alert alert-danger">
+    <h4>Czy na pewno chcesz usunąć produkt: <strong>@Model.Name</strong>?</h4>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Kategoria</dt>
+    <dd class="col-sm-9">@Model.Category?.Name</dd>
+
+    <dt class="col-sm-3">Producent</dt>
+    <dd class="col-sm-9">@Model.Producer?.Name</dd>
+
+    <dt class="col-sm-3">Cena</dt>
+    <dd class="col-sm-9">@Model.Price zł</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed">
+    <input type="hidden" asp-for="ProductID"/>
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

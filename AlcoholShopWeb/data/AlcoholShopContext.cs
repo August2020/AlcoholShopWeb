@@ -1,5 +1,6 @@
 ﻿using AlcoholShop.Models;
 using AlcoholShopWeb.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Reflection.Emit;
 
 namespace AlcoholShopWeb.Data
 {
-    public class AlcoholShopContext : DbContext
+    public class AlcoholShopContext : IdentityDbContext<ApplicationUser>
     {
         public AlcoholShopContext(DbContextOptions<AlcoholShopContext> options) : base(options) { }
 

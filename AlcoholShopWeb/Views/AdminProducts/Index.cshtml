@@ -1,5 +1,37 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<AlcoholShopWeb.Models.Product>
+
+<h2 class="mt-4">Panel administratora — Produkty</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Dodaj nowy produkt</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Nazwa</th>
+            <th>Kategoria</th>
+            <th>Producent</th>
+            <th>Cena</th>
+            <th>Dostępność</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Category?.Name</td>
+                <td>@item.Producer?.Name</td>
+                <td>@item.Price zł</td>
+                <td>@(item.Availability == true ? "Tak" : "Nie")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductID" class="btn btn-warning btn-sm">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@item.ProductID" class="btn btn-danger btn-sm">Usuń</a>
+                    <a asp-action="Details" asp-route-id="@item.ProductID" class="btn btn-info btn-sm">Szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
