@@ -7,18 +7,18 @@ namespace AlcoholShop.Models
     public class CartItem
     {
         [Key]
-        public int CartItemId { get; set; }
+        public int CartItemID { get; set; }
 
         [Required]
-        public int CartId { get; set; }
+        public int CartID { get; set; }
 
-        [ForeignKey(nameof(CartId))]
+        [ForeignKey(nameof(CartID))]
         public Cart Cart { get; set; }
 
         [Required]
-        public int ProductId { get; set; }
+        public int ProductID { get; set; }
 
-        [ForeignKey(nameof(ProductId))]
+        [ForeignKey(nameof(ProductID))]
         public Product Product { get; set; }
 
         [Required]

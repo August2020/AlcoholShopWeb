@@ -31,7 +31,7 @@ namespace AlcoholShopWeb.Services
         public void AddToCart(CartItem item)
         {
             var cart = GetCart();
-            var existing = cart.FirstOrDefault(p => p.ProductId == item.ProductId);
+            var existing = cart.FirstOrDefault(p => p.ProductID == item.ProductID);
             if (existing != null)
             {
                 existing.Quantity += item.Quantity;
@@ -43,10 +43,10 @@ namespace AlcoholShopWeb.Services
             SaveCart(cart);
         }
 
-        public void RemoveFromCart(int productId)
+        public void RemoveFromCart(int productID)
         {
             var cart = GetCart();
-            var item = cart.FirstOrDefault(p => p.ProductId == productId);
+            var item = cart.FirstOrDefault(p => p.ProductID == productID);
             if (item != null)
             {
                 cart.Remove(item);

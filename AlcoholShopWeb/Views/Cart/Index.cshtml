@@ -32,8 +32,8 @@ else
                     <td>@(item.Product.Price* item.Quantity).ToString("C")</td>
                     <td>
                         <form asp-action="RemoveItem" method="post">
-                            <input type="hidden" name="productId" value="@item.ProductId" />
-                            <input type="hidden" name="userId" value="@Model.UserId" />
+                            <input type="hidden" name="productId" value="@item.ProductID" />
+                            <input type="hidden" name="userId" value="@Model.UserID" />
                             <button type="submit" class="btn btn-sm btn-danger">Usuń</button>
                         </form>
                     </td>
@@ -47,11 +47,11 @@ else
 
         <div>
             <form asp-action="ClearCart" method="post" class="d-inline">
-                <input type="hidden" name="userId" value="@Model.UserId" />
+                <input type="hidden" name="userId" value="@Model.UserID" />
                 <button type="submit" class="btn btn-warning">Wyczyść koszyk</button>
             </form>
 
-            <a asp-controller="Order" asp-action="Create" asp-route-userId="@Model.UserId" class="btn btn-success">
+            <a asp-controller="Order" asp-action="Create" asp-route-userId="@Model.UserID" class="btn btn-success">
                 Przejdź do zamówienia
             </a>
         </div>

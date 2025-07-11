@@ -1,4 +1,6 @@
-﻿namespace AlcoholShopWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlcoholShopWeb.Models
 {
     public class BlogPost
     {

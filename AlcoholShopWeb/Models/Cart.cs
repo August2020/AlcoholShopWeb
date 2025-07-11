@@ -7,12 +7,12 @@ namespace AlcoholShop.Models
     public class Cart
     {
         [Key]
-        public int CartId { get; set; }
+        public int CartID { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int UserID { get; set; }
 
-        [ForeignKey(nameof(UserId))]
+        [ForeignKey(nameof(UserID))]
         public User User { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
