@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using AlcoholShopWeb.Models;
+using AlcoholShopWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlcoholShopWeb.Controllers

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AlcoholShopWeb.Models;
-using AlcoholShopWeb.ViewModels;
+using AlcoholShopWeb.Models.ViewModels;
 
 namespace AlcoholShopWeb.Controllers
 {

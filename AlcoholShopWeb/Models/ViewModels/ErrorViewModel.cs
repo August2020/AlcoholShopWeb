@@ -1,4 +1,4 @@
-namespace AlcoholShopWeb.Models
+namespace AlcoholShopWeb.Models.ViewModels
 {
     public class ErrorViewModel
     {

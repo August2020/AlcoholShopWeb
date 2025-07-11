@@ -1,4 +1,4 @@
-﻿namespace AlcoholShopWeb.ViewModels
+﻿namespace AlcoholShopWeb.Models.ViewModels
 {
     public class LoginViewModel
     {

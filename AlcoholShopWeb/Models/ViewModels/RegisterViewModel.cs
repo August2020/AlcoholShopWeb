@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlcoholShopWeb.ViewModels
+namespace AlcoholShopWeb.Models.ViewModels
 {
     public class RegisterViewModel
     {
