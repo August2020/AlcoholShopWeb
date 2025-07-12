@@ -11,12 +11,8 @@ builder.Services.AddDbContext<AlcoholShopContext>(options =>
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-})
-.AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<AlcoholShopContext>();
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
 
@@ -29,7 +25,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication();
+
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

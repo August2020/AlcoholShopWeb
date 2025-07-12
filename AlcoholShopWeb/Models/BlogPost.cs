@@ -4,6 +4,7 @@ namespace AlcoholShopWeb.Models
 {
     public class BlogPost
     {
+        [Key]
         public int PostID { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

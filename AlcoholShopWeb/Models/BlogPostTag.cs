@@ -1,7 +1,10 @@
-﻿namespace AlcoholShopWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlcoholShopWeb.Models
 {
     public class BlogPostTag
     {
+        [Key]
         public int PostID { get; set; }
         public int TagID { get; set; }
 

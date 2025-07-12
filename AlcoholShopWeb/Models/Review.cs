@@ -1,7 +1,10 @@
-﻿namespace AlcoholShopWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlcoholShopWeb.Models
 {
     public class Review
     {
+        [Key]
         public int ReviewID { get; set; }
         public int ProductID { get; set; }
         public int UserID { get; set; }

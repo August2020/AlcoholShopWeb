@@ -1,7 +1,10 @@
-﻿namespace AlcoholShopWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlcoholShopWeb.Models
 {
     public class Log
     {
+        [Key]
         public int LogID { get; set; }
         public int? UserID { get; set; }
         public string Action { get; set; }

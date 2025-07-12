@@ -1,7 +1,10 @@
-﻿namespace AlcoholShopWeb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace AlcoholShopWeb.Models
 {
     public class OrderItem
     {
+        [Key]
         public int OrderItemID { get; set; }
         public int OrderID { get; set; }
         public int ProductID { get; set; }

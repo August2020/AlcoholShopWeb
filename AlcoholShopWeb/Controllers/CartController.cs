@@ -17,7 +17,7 @@ namespace AlcoholShop.Controllers
 
         public async Task<IActionResult> Index(int UserID)
         {
-            var cart = await _context.Carts
+            var cart = await _context.Cart
                 .Include(c => c.CartItems)
                 .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(c => c.UserID == UserID);
@@ -28,12 +28,12 @@ namespace AlcoholShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddItem(int UserID, int productID, int quantity)
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserID == UserID);
+            var cart = await _context.Cart.FirstOrDefaultAsync(c => c.UserID == UserID);
 
             if (cart == null)
             {
                 cart = new Cart { UserID = UserID, CreatedAt = DateTime.UtcNow };
-                _context.Carts.Add(cart);
+                _context.Cart.Add(cart);
                 await _context.SaveChangesAsync();
             }
 
@@ -58,7 +58,7 @@ namespace AlcoholShop.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveItem(int UserID, int productID)
         {
-            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserID == UserID);
+            var cart = await _context.Cart.FirstOrDefaultAsync(c => c.UserID == UserID);
 
             if (cart != null)
             {
@@ -78,7 +78,7 @@ namespace AlcoholShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ClearCart(int UserID)
         {
-            var cart = await _context.Carts
+            var cart = await _context.Cart
                 .Include(c => c.CartItems)
                 .FirstOrDefaultAsync(c => c.UserID == UserID);
 

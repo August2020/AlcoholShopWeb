@@ -1,16 +1,10 @@
 ﻿using AlcoholShop.Models;
 using AlcoholShopWeb.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Net.NetworkInformation;
-using System.Reflection.Emit;
 
 namespace AlcoholShopWeb.Data
 {
-    public class AlcoholShopContext : IdentityDbContext<ApplicationUser>
+    public class AlcoholShopContext : DbContext
     {
         public AlcoholShopContext(DbContextOptions<AlcoholShopContext> options) : base(options) { }
 
@@ -30,8 +24,8 @@ namespace AlcoholShopWeb.Data
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         public DbSet<ProductionMethod> ProductionMethods { get; set; }
-        public DbSet<Aging> Agings { get; set; }
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Aging> Aging { get; set; }
+        public DbSet<Cart> Cart { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

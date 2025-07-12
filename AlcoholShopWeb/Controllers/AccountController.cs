@@ -1,88 +1,86 @@
-
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using AlcoholShopWeb.Data;
 using AlcoholShopWeb.Models;
-using AlcoholShopWeb.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AlcoholShopWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AlcoholShopContext _context;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
-                                 SignInManager<ApplicationUser> signInManager,
-                                 RoleManager<IdentityRole> roleManager)
+        public AccountController(AlcoholShopContext context, IPasswordHasher<User> passwordHasher)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
+            _context = context;
+            _passwordHasher = passwordHasher;
         }
 
         [HttpGet]
         public IActionResult Register() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(User model, string password)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
             {
-                await _userManager.AddToRoleAsync(user, "User");
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                ModelState.AddModelError("", "Użytkownik z tym e-mailem już istnieje.");
+                return View(model);
             }
 
-            foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+            model.PasswordHash = _passwordHasher.HashPassword(model, password);
+            model.Role = "Client";
+            model.CreatedAt = DateTime.UtcNow;
 
-            return View(model);
+            Console.WriteLine($"Formularz: {model.Email}, {model.FirstName}, {password}");
+            if (!ModelState.IsValid)
+            {
+                Console.WriteLine("Nieprawidłowy model!");
+                return View(model);
+            }
+
+            _context.Users.Add(model);
+            await _context.SaveChangesAsync();
+
+            HttpContext.Session.SetInt32("UserId", model.UserID);
+            HttpContext.Session.SetString("UserRole", model.Role);
+            HttpContext.Session.SetString("UserName", model.FirstName);
+
+            return RedirectToAction("Index", "Home");
         }
+
 
         [HttpGet]
         public IActionResult Login() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            if (!ModelState.IsValid)
-                return View(model);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Nieprawidłowe dane logowania.");
+                return View();
+            }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+                ModelState.AddModelError("", "Nieprawidłowe dane logowania.");
+                return View();
+            }
 
-            if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+            HttpContext.Session.SetInt32("UserId", user.UserID);
+            HttpContext.Session.SetString("UserRole", user.Role);
 
-            ModelState.AddModelError("", "Nieprawidłowa próba logowania");
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAdmin()
+        public IActionResult Logout()
         {
-            var email = "admin@shop.pl";
-            var password = "Admin123!";
-            if (await _userManager.FindByEmailAsync(email) == null)
-            {
-                var user = new ApplicationUser { UserName = email, Email = email };
-                var result = await _userManager.CreateAsync(user, password);
-                if (result.Succeeded)
-                    await _userManager.AddToRoleAsync(user, "Admin");
-            }
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
     }
