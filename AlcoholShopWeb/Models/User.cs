@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AlcoholShopWeb.Models
 {
@@ -6,16 +7,23 @@ namespace AlcoholShopWeb.Models
     {
         [Key]
         public int UserID { get; set; }
+
+        [Required(ErrorMessage = "Email jest wymagany")]
+        [EmailAddress(ErrorMessage = "Niepoprawny email")]
         public string Email { get; set; }
+
+        [BindNever]
         public string PasswordHash { get; set; }
+
+        [Required(ErrorMessage = "Imię jest wymagane")]
         public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "Nazwisko jest wymagane")]
         public string LastName { get; set; }
-        public string Role { get; set; } // Enum: 'Admin', 'Client'
-        public DateTime CreatedAt { get; set; }
 
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
-        public ICollection<Log> Logs { get; set; } = new List<Log>();
-        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        [BindNever]
+        public string Role { get; set; } // 'Admin' lub 'Client'
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
-
 }

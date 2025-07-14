@@ -23,6 +23,7 @@ namespace AlcoholShopWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(User model, string password)
         {
+
             if (await _context.Users.AnyAsync(u => u.Email == model.Email))
             {
                 ModelState.AddModelError("", "Użytkownik z tym e-mailem już istnieje.");
@@ -33,13 +34,6 @@ namespace AlcoholShopWeb.Controllers
             model.Role = "Client";
             model.CreatedAt = DateTime.UtcNow;
 
-            Console.WriteLine($"Formularz: {model.Email}, {model.FirstName}, {password}");
-            if (!ModelState.IsValid)
-            {
-                Console.WriteLine("Nieprawidłowy model!");
-                return View(model);
-            }
-
             _context.Users.Add(model);
             await _context.SaveChangesAsync();
 
@@ -49,7 +43,6 @@ namespace AlcoholShopWeb.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
 
         [HttpGet]
         public IActionResult Login() => View();
@@ -83,5 +76,46 @@ namespace AlcoholShopWeb.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(User updatedUser)
+        {
+            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            user.FirstName = updatedUser.FirstName;
+            user.LastName = updatedUser.LastName;
+            user.Email = updatedUser.Email;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Dane zostały zaktualizowane";
+            return RedirectToAction("Profile");
+        }
+
+        public async Task<IActionResult> Orders()
+        {
+            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+
+            var orders = await _context.Orders
+                .Where(o => o.UserID == userId)
+                .Include(o => o.Status)
+                .Include(o => o.OrderItems).ThenInclude(i => i.Product)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
     }
 }

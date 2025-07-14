@@ -1,0 +1,19 @@
+@model List<AlcoholShopWeb.Models.BlogPost>
+
+<h2>Blog</h2>
+
+@foreach (var post in Model)
+{
+    <div class="mb-4">
+        <h4>
+            <a asp-action="Details" asp-route-id="@post.PostID">@post.Title</a>
+        </h4>
+        <p>@post.PublishDate?.ToString("dd.MM.yyyy") | Kategoria: @post.BlogCategory?.Name</p>
+        <div>
+            @foreach (var tag in post.BlogPostTags.Select(t => t.Tag))
+            {
+                <span class="badge bg-secondary">@tag.Name</span>
+            }
+        </div>
+    </div>
+}

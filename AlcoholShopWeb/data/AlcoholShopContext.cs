@@ -19,6 +19,7 @@ namespace AlcoholShopWeb.Data
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<BlogCategory> BlogCategories { get; set; }
         public DbSet<BlogTag> BlogTags { get; set; }
+        public DbSet<BlogPostTag> BlogPostTags { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
@@ -31,6 +32,19 @@ namespace AlcoholShopWeb.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BlogPostTag>()
+                .HasKey(bpt => new { bpt.PostID, bpt.TagID });
+
+            modelBuilder.Entity<BlogPostTag>()
+                .HasOne(bpt => bpt.Post)
+                .WithMany(p => p.BlogPostTags)
+                .HasForeignKey(bpt => bpt.PostID);
+
+            modelBuilder.Entity<BlogPostTag>()
+                .HasOne(bpt => bpt.Tag)
+                .WithMany(t => t.BlogPostTags)
+                .HasForeignKey(bpt => bpt.TagID);
         }
     }
 }

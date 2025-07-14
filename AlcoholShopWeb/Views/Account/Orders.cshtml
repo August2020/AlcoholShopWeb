@@ -1,0 +1,44 @@
+﻿@model List<AlcoholShopWeb.Models.Order>
+@{
+    ViewData["Title"] = "Moje zamówienia";
+}
+
+<h2>Moje zamówienia</h2>
+
+@if (!Model.Any())
+{
+    <p>Brak zamówień.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Kwota</th>
+                <th>Data</th>
+                <th>Produkty</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderID</td>
+                    <td>@order.Status?.Name</td>
+                    <td>@order.TotalAmount.ToString("C")</td>
+                    <td>@order.CreatedAt.ToString("g")</td>
+                    <td>
+                        <ul>
+                            @foreach (var item in order.OrderItems)
+                            {
+                                <li>@item.Product.Name × @item.Quantity</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,27 @@
+﻿@model AlcoholShopWeb.Models.User
+@{
+    ViewData["Title"] = "Mój profil";
+}
+
+<h2>Mój profil</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Imię</label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Nazwisko</label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+</form>

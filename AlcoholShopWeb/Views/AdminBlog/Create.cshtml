@@ -1,0 +1,41 @@
+﻿@model AlcoholShopWeb.Models.BlogPost
+@{
+    ViewData["Title"] = "Nowy wpis";
+    var tags = ViewData["Tags"] as List<AlcoholShopWeb.Models.BlogTag>;
+}
+
+<h2>Nowy wpis</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label>Tytuł</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Kategoria</label>
+        <select asp-for="BlogCategoryID" asp-items="ViewBag.BlogCategoryID" class="form-control"></select>
+    </div>
+    <div class="mb-3">
+        <label>Zawartość</label>
+        <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+    </div>
+    <div class="mb-3">
+        <label>Data publikacji</label>
+        <input asp-for="PublishDate" type="date" class="form-control" />
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="IsPublished" class="form-check-input" />
+        <label class="form-check-label">Opublikowany</label>
+    </div>
+    <div class="mb-3">
+        <label>Tagi</label><br />
+        @foreach (var tag in tags)
+        {
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" name="selectedTags" value="@tag.TagID" />
+                <label class="form-check-label">@tag.Name</label>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-success">Zapisz</button>
+</form>

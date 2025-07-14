@@ -1,0 +1,35 @@
+﻿@model IEnumerable<AlcoholShopWeb.Models.BlogPost>
+@{
+    ViewData["Title"] = "Zarządzanie blogiem";
+}
+
+<h2>Posty blogowe</h2>
+
+<a class="btn btn-success mb-3" asp-action="Create">+ Nowy post</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Kategoria</th>
+            <th>Opublikowany</th>
+            <th>Data publikacji</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model)
+        {
+            <tr>
+                <td>@post.Title</td>
+                <td>@post.BlogCategory?.Name</td>
+                <td>@(post.IsPublished ? "Tak" : "Nie")</td>
+                <td>@post.PublishDate?.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@post.PostID" class="btn btn-sm btn-primary">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@post.PostID" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
