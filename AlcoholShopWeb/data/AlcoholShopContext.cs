@@ -13,6 +13,7 @@ namespace AlcoholShopWeb.Data
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderStatus> OrderStatus { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -21,7 +22,6 @@ namespace AlcoholShopWeb.Data
         public DbSet<BlogTag> BlogTags { get; set; }
         public DbSet<BlogPostTag> BlogPostTags { get; set; }
         public DbSet<Log> Logs { get; set; }
-        public DbSet<OrderStatus> OrderStatuses { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         public DbSet<ProductionMethod> ProductionMethods { get; set; }

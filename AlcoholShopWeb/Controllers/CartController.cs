@@ -26,13 +26,19 @@ namespace AlcoholShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItem(int UserID, int productID, int quantity)
+        public async Task<IActionResult> AddItem(int productID, int quantity)
         {
-            var cart = await _context.Cart.FirstOrDefaultAsync(c => c.UserID == UserID);
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null || userId == 0) {
+                return BadRequest("Nieprawidłowy użytkownik.");
+            }
+
+            var cart = await _context.Cart.FirstOrDefaultAsync(c => c.UserID == userId);
 
             if (cart == null)
             {
-                cart = new Cart { UserID = UserID, CreatedAt = DateTime.UtcNow };
+                cart = new Cart { UserID = (int)userId, CreatedAt = DateTime.UtcNow };
                 _context.Cart.Add(cart);
                 await _context.SaveChangesAsync();
             }
@@ -52,7 +58,7 @@ namespace AlcoholShop.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { UserID });
+            return RedirectToAction("Index", new { userId });
         }
 
         [HttpPost]

@@ -1,7 +1,8 @@
 ﻿
+using AlcoholShopWeb.Data;
+using AlcoholShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AlcoholShopWeb.Data;
 
 namespace AlcoholShopWeb.Controllers
 {
@@ -35,11 +36,38 @@ namespace AlcoholShopWeb.Controllers
                 .Include(p => p.Country)
                 .Include(p => p.ProductionMethod)
                 .Include(p => p.Aging)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.User)
                 .FirstOrDefaultAsync(p => p.ProductID == id);
 
             if (product == null) return NotFound();
 
+            ViewBag.UserId = HttpContext.Session.GetInt32("UserId");
+
             return View(product);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReview(int productId, string comment, int rating)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null || string.IsNullOrWhiteSpace(comment) || rating < 1 || rating > 5)
+                return RedirectToAction("Details", new { id = productId });
+
+            var review = new Review
+            {
+                ProductID = productId,
+                UserID = userId.Value,
+                Comment = comment,
+                Rating = rating,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = productId });
+        }
+
     }
 }

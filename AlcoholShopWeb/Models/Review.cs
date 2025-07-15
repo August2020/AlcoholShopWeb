@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlcoholShopWeb.Models
 {
@@ -6,14 +7,26 @@ namespace AlcoholShopWeb.Models
     {
         [Key]
         public int ReviewID { get; set; }
-        public int ProductID { get; set; }
-        public int UserID { get; set; }
-        public int? Rating { get; set; } // Between 1 and 5
-        public string? Comment { get; set; }
-        public DateTime CreatedAt { get; set; }
 
+        [Required]
+        public int ProductID { get; set; }
+
+        [ForeignKey(nameof(ProductID))]
         public Product Product { get; set; }
+
+        [Required]
+        public int UserID { get; set; }
+
+        [ForeignKey(nameof(UserID))]
         public User User { get; set; }
+
+        [Required]
+        [StringLength(500)]
+        public string Comment { get; set; }
+
+        [Range(1, 5)]
+        public int Rating { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 
 }

@@ -1,5 +1,4 @@
 ﻿
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AlcoholShopWeb.Data;
@@ -7,7 +6,6 @@ using AlcoholShopWeb.Models;
 
 namespace AlcoholShopWeb.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class AdminProductsController : Controller
     {
         private readonly AlcoholShopContext _context;
@@ -19,8 +17,17 @@ namespace AlcoholShopWeb.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = _context.Products.Include(p => p.Category).Include(p => p.Producer);
-            return View(await products.ToListAsync());
+            if (HttpContext.Session.GetString("UserRole") != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Producer)
+                .ToListAsync();
+
+            return View(products);
         }
 
         public async Task<IActionResult> Details(int? id)

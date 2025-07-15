@@ -1,0 +1,36 @@
+﻿@model List<AlcoholShopWeb.Models.Order>
+@{
+    ViewData["Title"] = "Zamówienia";
+}
+
+<h2>Zamówienia</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Klient</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Kwota</th>
+            <th>Data</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.OrderID</td>
+                <td>@o.Name</td>
+                <td>@o.Email</td>
+                <td>@o.Status?.Name</td>
+                <td>@o.TotalAmount.ToString("C")</td>
+                <td>@o.CreatedAt.ToString("g")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@o.OrderID" class="btn btn-sm btn-primary">Szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

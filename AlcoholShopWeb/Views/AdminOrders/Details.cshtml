@@ -1,0 +1,51 @@
+﻿@model AlcoholShopWeb.Models.Order
+@{
+    ViewData["Title"] = $"Zamówienie #{Model.OrderID}";
+}
+
+<h2>Zamówienie #@Model.OrderID</h2>
+
+<div class="mb-3">
+    <strong>Data:</strong> @Model.CreatedAt.ToString("g") <br />
+    <strong>Klient:</strong> @Model.Name (@Model.Email)<br />
+    <strong>Adres:</strong> @Model.Address <br />
+    <strong>Status:</strong> @Model.Status?.Name
+</div>
+
+<form asp-action="UpdateStatus" method="post" class="mb-4">
+    <input type="hidden" name="orderId" value="@Model.OrderID" />
+    <div class="input-group">
+        <select name="statusId" class="form-select">
+            @foreach (var status in ViewBag.Statuses)
+            {
+                <option value="@status.StatusID" selected="@(Model.StatusID == status.StatusID)">
+                    @status.Name
+                </option>
+            }
+        </select>
+        <button class="btn btn-success" type="submit">Zmień status</button>
+    </div>
+</form>
+
+<h4>Produkty</h4>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Ilość</th>
+            <th>Cena</th>
+            <th>Razem</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.Product?.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.UnitPrice.ToString("C")</td>
+                <td>@(item.Quantity * item.UnitPrice).ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
