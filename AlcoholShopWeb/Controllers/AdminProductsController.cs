@@ -1,8 +1,9 @@
 ﻿
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using AlcoholShopWeb.Data;
 using AlcoholShopWeb.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlcoholShopWeb.Controllers
 {
@@ -49,6 +50,12 @@ namespace AlcoholShopWeb.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "Name");
+            ViewBag.Producers = new SelectList(_context.Producers, "ProducerID", "Name");
+            ViewBag.Countries = new SelectList(_context.Countries, "CountryID", "Name");
+            ViewBag.ProductionMethods = new SelectList(_context.ProductionMethods, "ProductionMethodID", "Name");
+            ViewBag.Aging = new SelectList(_context.Aging, "AgingID", "Name");
+
             return View();
         }
 

@@ -32,10 +32,6 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Blog" asp-action="Index">Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Cart" asp-action="Index" asp-route-userId="@userId">Koszyk</a>
-                        </li>
-
                         @if (userRole == "Admin")
                         {
                             <li class="nav-item dropdown">
@@ -43,6 +39,10 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="AdminProducts" asp-action="Index">Produkty</a></li>
                                     <li><a class="dropdown-item" asp-controller="AdminOrders" asp-action="Index">Zamówienia</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AdminProducers" asp-action="Index">Producenci</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AdminCountries" asp-action="Index">Kraje</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AdminProductionMethods" asp-action="Index">Metody produkcji</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AdminAging" asp-action="Index">Starzenie</a></li>
                                     <li><a class="dropdown-item" asp-controller="AdminBlog" asp-action="Index">Blog</a></li>
                                 </ul>
                             </li>
@@ -52,7 +52,10 @@
                     <ul class="navbar-nav ms-auto">
                         @if (Context.Session.GetString("UserId") != null)
                         {
-                            <li class="nav-item dropdown">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="Index" asp-route-userId="@userId">Koszyk</a>
+                            </li>
+                            <li class="nav-item dropdown text-white">
                                 <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-person-circle"></i>
                                 </a>

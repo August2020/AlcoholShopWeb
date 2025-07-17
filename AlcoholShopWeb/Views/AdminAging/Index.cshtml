@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AlcoholShopWeb.Models.Aging>
+
+@{
+    ViewData["Title"] = "Starzenie";
+}
+
+<h2>Lista producentów</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Dodaj starzenie</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.AgingID" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@item.AgingID" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

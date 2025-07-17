@@ -25,6 +25,11 @@
     </div>
 
     <div class="mb-3">
+        <label for="BirthDate">Data urodzenia</label>
+        <input type="date" name="BirthDate" class="form-control" value="@Model.BirthDate?.ToString("yyyy-MM-dd")" />
+    </div>
+
+    <div class="mb-3">
         <label>Hasło</label>
         <input name="password" type="password" class="form-control" />
     </div>

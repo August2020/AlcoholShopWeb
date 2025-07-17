@@ -1,11 +1,10 @@
 ﻿using AlcoholShopWeb.Data;
 using AlcoholShopWeb.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlcoholShop.Controllers
+namespace AlcoholShopWeb.Controllers
 {
     public class OrdersController : Controller
     {
@@ -16,108 +15,79 @@ namespace AlcoholShop.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
-            var orders = _context.Orders.Include(o => o.User);
-            return View(await orders.ToListAsync());
-        }
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Login", "Account");
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(c => c.UserID == userId);
 
-            var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderID == id);
+            if (cart == null || !cart.CartItems.Any())
+                return RedirectToAction("Index", "Cart", new { userId });
 
-            if (order == null) return NotFound();
+            ViewBag.DeliveryMethods = new SelectList(_context.DeliveryMethods, "DeliveryMethodID", "Name");
+            ViewBag.PaymentMethods = new SelectList(_context.PaymentMethods, "PaymentMethodID", "Name");
 
-            return View(order);
-        }
+            var user = await _context.Users.FindAsync(userId);
 
-        public IActionResult Create()
-        {
-            ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email");
-            return View();
+            return View(new Order
+            {
+                UserID = user.UserID,
+                Name = $"{user.FirstName} {user.LastName}",
+                Email = user.Email
+            });
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderID,OrderDate,TotalAmount,Status,UserID")] Order order)
+        public async Task<IActionResult> Confirm(Order model)
         {
-            if (ModelState.IsValid)
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return RedirectToAction("Login", "Account");
+
+            var cart = await _context.Cart
+                .Include(c => c.CartItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(c => c.UserID == userId);
+
+            if (cart == null || !cart.CartItems.Any())
+                return RedirectToAction("Index", "Cart", new { userId });
+
+            var order = new Order
             {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email", order.UserID);
-            return View(order);
-        }
+                UserID = userId,
+                Name = model.Name,
+                Address = model.Address,
+                Email = model.Email,
+                DeliveryMethodID = model.DeliveryMethodID,
+                PaymentMethodID = model.PaymentMethodID,
+                StatusID = 1,
+                CreatedAt = DateTime.UtcNow,
+                TotalAmount = cart.CartItems.Sum(i => i.Product.Price * i.Quantity)
+            };
 
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null) return NotFound();
-
-            ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email", order.UserID);
-            return View(order);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderID,OrderDate,TotalAmount,Status,UserID")] Order order)
-        {
-            if (id != order.OrderID) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderID))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email", order.UserID);
-            return View(order);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.OrderID == id);
-
-            if (order == null) return NotFound();
-
-            return View(order);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            _context.Orders.Remove(order);
+            _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.OrderID == id);
+            foreach (var item in cart.CartItems)
+            {
+                var orderItem = new OrderItem
+                {
+                    OrderID = order.OrderID,
+                    ProductID = item.ProductID,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.Product.Price
+                };
+                _context.OrderItems.Add(orderItem);
+            }
+
+            _context.CartItems.RemoveRange(cart.CartItems);
+            await _context.SaveChangesAsync();
+
+            return View("Confirm");
         }
     }
 }

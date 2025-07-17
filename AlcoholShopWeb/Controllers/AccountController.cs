@@ -80,7 +80,9 @@ namespace AlcoholShopWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return NotFound();
+
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
             return View(user);
@@ -89,7 +91,9 @@ namespace AlcoholShopWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Profile(User updatedUser)
         {
-            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return NotFound();
+
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
 
@@ -106,7 +110,8 @@ namespace AlcoholShopWeb.Controllers
 
         public async Task<IActionResult> Orders()
         {
-            int userId = int.Parse(HttpContext.Session.GetString("UserId") ?? "0");
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return NotFound();
 
             var orders = await _context.Orders
                 .Where(o => o.UserID == userId)
