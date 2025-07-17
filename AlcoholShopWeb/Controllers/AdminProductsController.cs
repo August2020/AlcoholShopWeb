@@ -60,7 +60,6 @@ namespace AlcoholShopWeb.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
         {
             if (ModelState.IsValid)
@@ -69,6 +68,13 @@ namespace AlcoholShopWeb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "Name");
+            ViewBag.Producers = new SelectList(_context.Producers, "ProducerID", "Name");
+            ViewBag.Countries = new SelectList(_context.Countries, "CountryID", "Name");
+            ViewBag.ProductionMethods = new SelectList(_context.ProductionMethods, "ProductionMethodID", "Name");
+            ViewBag.Aging = new SelectList(_context.Aging, "AgingID", "Name");
+
             return View(product);
         }
 
@@ -78,6 +84,12 @@ namespace AlcoholShopWeb.Controllers
 
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
+
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "Name", product.CategoryID);
+            ViewBag.Producers = new SelectList(_context.Producers, "ProducerID", "Name", product.ProducerID);
+            ViewBag.Countries = new SelectList(_context.Countries, "CountryID", "Name", product.CountryID);
+            ViewBag.ProductionMethods = new SelectList(_context.ProductionMethods, "ProductionMethodID", "Name", product.ProductionMethodID);
+            ViewBag.Aging = new SelectList(_context.Aging, "AgingID", "Name", product.AgingID);
 
             return View(product);
         }
@@ -94,6 +106,7 @@ namespace AlcoholShopWeb.Controllers
                 {
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -102,32 +115,44 @@ namespace AlcoholShopWeb.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Categories = new SelectList(_context.Categories, "CategoryID", "Name", product.CategoryID);
+            ViewBag.Producers = new SelectList(_context.Producers, "ProducerID", "Name", product.ProducerID);
+            ViewBag.Countries = new SelectList(_context.Countries, "CountryID", "Name", product.CountryID);
+            ViewBag.ProductionMethods = new SelectList(_context.ProductionMethods, "ProductionMethodID", "Name", product.ProductionMethodID);
+            ViewBag.Aging = new SelectList(_context.Aging, "AgingID", "Name", product.AgingID);
+
             return View(product);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null) return NotFound();
+            var post = await _context.BlogPosts
+                .Include(p => p.BlogCategory)
+                .FirstOrDefaultAsync(p => p.PostID == id);
 
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Producer)
-                .FirstOrDefaultAsync(m => m.ProductID == id);
+            if (post == null)
+                return NotFound();
 
-            if (product == null) return NotFound();
-
-            return View(product);
+            return View(post);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            var post = await _context.BlogPosts
+                .Include(p => p.BlogPostTags)
+                .FirstOrDefaultAsync(p => p.PostID == id);
+
+            if (post != null)
+            {
+                _context.BlogPostTags.RemoveRange(post.BlogPostTags);
+                _context.BlogPosts.Remove(post);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }

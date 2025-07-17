@@ -35,7 +35,7 @@
                         @if (userRole == "Admin")
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Panel admina</a>
+                                <a class="nav-link dropdown-toggle text-secondary" href="#" data-bs-toggle="dropdown">Panel admina</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="AdminProducts" asp-action="Index">Produkty</a></li>
                                     <li><a class="dropdown-item" asp-controller="AdminOrders" asp-action="Index">Zamówienia</a></li>
@@ -55,8 +55,8 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Cart" asp-action="Index" asp-route-userId="@userId">Koszyk</a>
                             </li>
-                            <li class="nav-item dropdown text-white">
-                                <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-secondary" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
                                     <i class="bi bi-person-circle"></i>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">

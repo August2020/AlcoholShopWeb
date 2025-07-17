@@ -95,10 +95,16 @@ namespace AlcoholShopWeb.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var post = await _context.BlogPosts.FindAsync(id);
+            var post = await _context.BlogPosts
+                .Include(p => p.BlogPostTags)
+                .FirstOrDefaultAsync(p => p.PostID == id);
+
             if (post != null)
             {
+                _context.BlogPostTags.RemoveRange(post.BlogPostTags);
+
                 _context.BlogPosts.Remove(post);
+
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

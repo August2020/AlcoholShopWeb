@@ -1,0 +1,25 @@
+﻿@model AlcoholShopWeb.Models.ProductionMethod
+
+@{
+    ViewData["Title"] = "Dodaj metodę";
+}
+
+<h2>Dodaj metodę</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <div class="mb-3 mt-3">
+            <label asp-for="Description" class="form-label">Opis</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Zapisz</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

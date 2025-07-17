@@ -25,7 +25,7 @@
                 <td>@o.Name</td>
                 <td>@o.Email</td>
                 <td>@o.Status?.Name</td>
-                <td>@o.TotalAmount.ToString("C")</td>
+                <td>@o.TotalAmount</td>
                 <td>@o.CreatedAt.ToString("g")</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@o.OrderID" class="btn btn-sm btn-primary">Szczegóły</a>

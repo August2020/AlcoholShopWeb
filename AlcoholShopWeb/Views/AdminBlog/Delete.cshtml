@@ -1,0 +1,14 @@
+﻿@model AlcoholShopWeb.Models.BlogPost
+
+<h2>Usuń wpis</h2>
+
+<div class="alert alert-warning">
+    Czy na pewno chcesz usunąć wpis <strong>@Model.Title</strong>?
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="PostID" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

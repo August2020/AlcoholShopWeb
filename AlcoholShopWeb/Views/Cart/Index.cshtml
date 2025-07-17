@@ -29,7 +29,7 @@ else
                     <td>@item.Product.Name</td>
                     <td>@item.Product.Price.ToString("C")</td>
                     <td>@item.Quantity</td>
-                    <td>@(item.Product.Price* item.Quantity).ToString("C")</td>
+                    <td>@(item.Product.Price* item.Quantity)</td>
                     <td>
                         <form asp-action="RemoveItem" method="post">
                             <input type="hidden" name="productId" value="@item.ProductID" />
@@ -43,7 +43,7 @@ else
     </table>
 
     <div class="d-flex justify-content-between align-items-center">
-        <h4>Suma: @Model.CartItems.Sum(i => i.Product.Price * i.Quantity).ToString("C")</h4>
+        <h4>Suma: @Model.CartItems.Sum(i => i.Product.Price * i.Quantity)</h4>
 
         <div>
             <form asp-action="ClearCart" method="post" class="d-inline">

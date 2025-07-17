@@ -1,11 +1,15 @@
 ﻿@model AlcoholShopWeb.Models.Product
 
-<h2 class="mt-4">@ViewData["Title"] Produkt</h2>
+@{
+    ViewData["Title"] = "Dodaj Produkt";
+}
 
-<form asp-action="@ViewData["Action"]">
+<h2>Dodaj produkt</h2>
+
+<form asp-action="Create" method="post">
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control"/>
+        <input asp-for="Name" class="form-control" />
     </div>
 
     <div class="mb-3">
@@ -15,22 +19,37 @@
 
     <div class="mb-3">
         <label asp-for="Price" class="form-label"></label>
-        <input asp-for="Price" class="form-control"/>
+        <input asp-for="Price" class="form-control" />
     </div>
 
     <div class="mb-3">
         <label asp-for="VolumeML" class="form-label"></label>
-        <input asp-for="VolumeML" class="form-control"/>
+        <input asp-for="VolumeML" class="form-control" />
     </div>
 
     <div class="mb-3">
         <label asp-for="AlcoholPercentage" class="form-label"></label>
-        <input asp-for="AlcoholPercentage" class="form-control"/>
+        <input asp-for="AlcoholPercentage" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="StockQuantity" class="form-label"></label>
+        <input asp-for="StockQuantity" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Year" class="form-label"></label>
+        <input asp-for="Year" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AgingDuration" class="form-label"></label>
+        <input asp-for="AgingDuration" class="form-control" />
     </div>
 
     <div class="form-check mb-3">
-        <input asp-for="Availability" class="form-check-input"/>
-        <label asp-for="Availability" class="form-check-label"></label>
+        <input asp-for="Availability" type="checkbox" class="form-check-input" />
+        <label asp-for="Availability" class="form-check-label">Dostępność</label>
     </div>
 
     <div class="mb-3">
@@ -60,7 +79,7 @@
 
     <div class="mb-3">
         <label asp-for="ImageURL" class="form-label">Link do zdjęcia</label>
-        <input asp-for="ImageURL" class="form-control"/>
+        <input asp-for="ImageURL" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Zapisz</button>
