@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `aging` (
   `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`AgingID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.aging: ~6 rows (około)
 INSERT INTO `aging` (`AgingID`, `Name`, `Description`) VALUES
@@ -79,13 +79,13 @@ CREATE TABLE IF NOT EXISTS `blogposts` (
   PRIMARY KEY (`PostID`),
   KEY `blogcategories_ibfk_1` (`Blogcategoryid`),
   CONSTRAINT `blogcategories_ibfk_1` FOREIGN KEY (`Blogcategoryid`) REFERENCES `blogcategories` (`BlogCategoryID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.blogposts: ~3 rows (około)
 INSERT INTO `blogposts` (`PostID`, `Title`, `Content`, `Blogcategoryid`, `IsPublished`, `PublishDate`, `CreatedAt`) VALUES
-	(1, 'Sztuka degustacji whisky — poradnik dla początkujących', 'Dowiedz się, jak prawidłowo degustować whisky i na co zwracać uwagę podczas próbowania różnych trunków.', 3, 1, '2025-06-15 10:00:00', '2025-06-29 02:21:17'),
-	(2, 'Nowe piwa z Browaru Raciborskiego w naszym sklepie!', 'Z radością informujemy, że do naszej oferty dołączyły klasyczne, twierdzowe i miodowe piwa z Browaru Raciborskiego.', 2, 1, '2025-06-18 12:00:00', '2025-06-29 02:21:17'),
-	(3, 'Historia ginu — od lekarstwa do koktajli', 'Poznaj fascynującą historię ginu i jego ewolucję na przestrzeni wieków.', 4, 1, '2025-06-20 14:30:00', '2025-06-29 02:21:17');
+	(1, 'Sztuka degustacji whisky — poradnik dla początkujących', 'Dowiedz się, jak prawidłowo degustować whisky i na co zwracać uwagę podczas próbowania różnych trunków.', 3, 1, '2025-06-15 00:00:00', '0001-01-01 00:00:00'),
+	(2, 'Nowe piwa z Browaru Raciborskiego w naszym sklepie!', 'Z radością informujemy, że do naszej oferty dołączyły klasyczne, twierdzowe i miodowe piwa z Browaru Raciborskiego.', 2, 1, '2025-06-18 00:00:00', '0001-01-01 00:00:00'),
+	(3, 'Historia ginu — od lekarstwa do koktajli', 'Poznaj fascynującą historię ginu i jego ewolucję na przestrzeni wieków.', 4, 1, '2025-06-20 00:00:00', '0001-01-01 00:00:00');
 
 -- Zrzut struktury tabela alcoholshop.blogposttags
 CREATE TABLE IF NOT EXISTS `blogposttags` (
@@ -100,9 +100,9 @@ CREATE TABLE IF NOT EXISTS `blogposttags` (
 -- Zrzucanie danych dla tabeli alcoholshop.blogposttags: ~4 rows (około)
 INSERT INTO `blogposttags` (`PostID`, `TagID`) VALUES
 	(1, 1),
-	(2, 2),
-	(3, 3),
-	(3, 4);
+	(1, 3),
+	(2, 4),
+	(2, 5);
 
 -- Zrzut struktury tabela alcoholshop.blogtags
 CREATE TABLE IF NOT EXISTS `blogtags` (
@@ -121,29 +121,29 @@ INSERT INTO `blogtags` (`TagID`, `Name`) VALUES
 
 -- Zrzut struktury tabela alcoholshop.cart
 CREATE TABLE IF NOT EXISTS `cart` (
-  `CartId` int NOT NULL AUTO_INCREMENT,
-  `UserId` int NOT NULL,
+  `CartID` int NOT NULL AUTO_INCREMENT,
+  `UserID` int NOT NULL,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`CartId`),
-  KEY `UserId` (`UserId`),
-  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`UserID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`CartID`) USING BTREE,
+  KEY `UserId` (`UserID`) USING BTREE,
+  CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.cart: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.cart: ~1 rows (około)
 
 -- Zrzut struktury tabela alcoholshop.cartitems
 CREATE TABLE IF NOT EXISTS `cartitems` (
-  `CartItemId` int NOT NULL AUTO_INCREMENT,
-  `CartId` int NOT NULL,
+  `CartItemID` int NOT NULL AUTO_INCREMENT,
+  `CartID` int NOT NULL,
   `ProductId` int NOT NULL,
   `Quantity` int NOT NULL,
-  PRIMARY KEY (`CartItemId`),
-  KEY `CartId` (`CartId`),
+  PRIMARY KEY (`CartItemID`) USING BTREE,
   KEY `ProductId` (`ProductId`),
-  CONSTRAINT `cartitems_ibfk_1` FOREIGN KEY (`CartId`) REFERENCES `cart` (`CartId`) ON DELETE CASCADE,
+  KEY `CartId` (`CartID`) USING BTREE,
+  CONSTRAINT `cartitems_ibfk_1` FOREIGN KEY (`CartID`) REFERENCES `cart` (`CartID`) ON DELETE CASCADE,
   CONSTRAINT `cartitems_ibfk_2` FOREIGN KEY (`ProductId`) REFERENCES `products` (`ProductID`) ON DELETE CASCADE,
   CONSTRAINT `cartitems_chk_1` CHECK ((`Quantity` > 0))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.cartitems: ~0 rows (około)
 
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`CountryID`),
   UNIQUE KEY `UQ_Countries_Name` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.countries: ~15 rows (około)
 INSERT INTO `countries` (`CountryID`, `Name`) VALUES
@@ -219,11 +219,13 @@ CREATE TABLE IF NOT EXISTS `logs` (
   PRIMARY KEY (`LogID`),
   KEY `UserID` (`UserID`),
   CONSTRAINT `logs_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.logs: ~0 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.logs: ~3 rows (około)
 INSERT INTO `logs` (`LogID`, `UserID`, `Action`, `Description`, `CreatedAt`) VALUES
-	(1, 3, 'LOGIN', 'Admin zalogował się do systemu', '2025-06-29 02:42:32');
+	(1, 3, 'Edycja postu', 'Zedytowano post o ID: 3, Nazwa: Historia ginu — od lekarstwa do koktajli', '2025-07-18 00:08:28'),
+	(2, 3, 'Edycja postu', 'Zedytowano post o ID: 1, Nazwa: Sztuka degustacji whisky — poradnik dla początkujących', '2025-07-18 00:08:35'),
+	(3, 3, 'Edycja produktu', 'Zmieniono produkt o ID: 1, Nazwa: Piwo Raciborskie Klasyczne', '2025-07-18 00:15:35');
 
 -- Zrzut struktury widok alcoholshop.orderdetailsview
 -- Tworzenie tymczasowej tabeli, aby przezwyciężyć błędy z zależnościami w WIDOKU
@@ -254,7 +256,7 @@ CREATE TABLE IF NOT EXISTS `orderitems` (
   KEY `ProductID` (`ProductID`),
   CONSTRAINT `orderitems_ibfk_1` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`),
   CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.orderitems: ~3 rows (około)
 INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `Quantity`, `UnitPrice`) VALUES
@@ -283,13 +285,13 @@ CREATE TABLE IF NOT EXISTS `orders` (
   CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`StatusID`) REFERENCES `orderstatus` (`StatusID`),
   CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`DeliveryMethodID`) REFERENCES `deliverymethods` (`DeliveryMethodID`),
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`PaymentMethodID`) REFERENCES `paymentmethods` (`PaymentMethodID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.orders: ~3 rows (około)
 INSERT INTO `orders` (`OrderID`, `UserID`, `Email`, `Name`, `Address`, `StatusID`, `DeliveryMethodID`, `PaymentMethodID`, `TotalAmount`, `CreatedAt`) VALUES
 	(1, 1, 'jan.kowalski@example.com', 'Jan Kowalski', 'ul. Mickiewicza 10, Warszawa', 1, 1, 1, 120.50, '2025-06-20 10:15:00'),
 	(2, 2, 'anna.nowak@example.com', 'Anna Nowak', 'ul. Piękna 5, Kraków', 2, 2, 2, 240.99, '2025-06-25 14:30:00'),
-	(3, NULL, 'gosciexample@example.com', 'Gość Zakupowy', 'ul. Spacerowa 7, Gdańsk', 1, 1, 4, 80.00, '2025-06-26 09:00:00');
+	(3, 1, 'jan.kowalski@example.com', 'Gość Zakupowy', 'ul. Spacerowa 7, Gdańsk', 1, 1, 4, 80.00, '2025-06-26 09:00:00');
 
 -- Zrzut struktury tabela alcoholshop.orderstatus
 CREATE TABLE IF NOT EXISTS `orderstatus` (
@@ -326,7 +328,7 @@ CREATE TABLE IF NOT EXISTS `producers` (
   `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`ProducerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.producers: ~36 rows (około)
 INSERT INTO `producers` (`ProducerID`, `Name`, `Description`) VALUES
@@ -373,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `productionmethods` (
   `Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`ProductionMethodID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.productionmethods: ~12 rows (około)
 INSERT INTO `productionmethods` (`ProductionMethodID`, `Name`, `Description`) VALUES
@@ -400,6 +402,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `Year` int DEFAULT NULL,
   `AgingDuration` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `Price` decimal(10,2) NOT NULL,
+  `StockQuantity` int NOT NULL DEFAULT '0',
   `Availability` tinyint(1) DEFAULT '1',
   `CategoryID` int DEFAULT NULL,
   `ProducerID` int DEFAULT NULL,
@@ -420,38 +423,38 @@ CREATE TABLE IF NOT EXISTS `products` (
   CONSTRAINT `products_ibfk_3` FOREIGN KEY (`CountryID`) REFERENCES `countries` (`CountryID`),
   CONSTRAINT `products_ibfk_4` FOREIGN KEY (`ProductionMethodID`) REFERENCES `productionmethods` (`ProductionMethodID`),
   CONSTRAINT `products_ibfk_5` FOREIGN KEY (`AgingID`) REFERENCES `aging` (`AgingID`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.products: ~28 rows (około)
-INSERT INTO `products` (`ProductID`, `Name`, `Description`, `VolumeML`, `AlcoholPercentage`, `Year`, `AgingDuration`, `Price`, `Availability`, `CategoryID`, `ProducerID`, `CountryID`, `ProductionMethodID`, `AgingID`, `ImageURL`, `CreatedAt`) VALUES
-	(1, 'Piwo Raciborskie Klasyczne', 'Tradycyjne piwo jasne.', 500, 5.00, 2024, NULL, 6.50, 1, 1, 1, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(2, 'Piwo Żywiec Jasne Pełne', 'Klasyczne piwo typu lager.', 500, 5.60, 2024, NULL, 5.90, 1, 1, 2, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(3, 'Piwo Raciborskie Twierdzowe', 'Mocniejsze piwo jasne.', 500, 6.20, 2024, NULL, 7.50, 1, 1, 1, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(4, 'Piwo Raciborskie Miodowe', 'Piwo z dodatkiem miodu.', 500, 5.60, 2024, NULL, 7.00, 1, 1, 1, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(5, 'Somersby Apple Cider', 'Orzeźwiający cydr jabłkowy.', 500, 4.50, 2024, NULL, 6.00, 1, 10, 26, 5, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(6, 'Jack Daniel\'s Old No. 7', 'Tennessee whiskey.', 700, 40.00, 2022, '4 lata', 120.00, 1, 4, 6, 4, 1, 3, NULL, '2025-06-28 23:08:15'),
-	(7, 'Jameson Irish Whiskey', 'Delikatna irlandzka whiskey.', 700, 40.00, 2022, '3 lata', 100.00, 1, 4, 7, 3, 4, 1, NULL, '2025-06-28 23:08:15'),
-	(8, 'Johnnie Walker Black Label', '12-letnia blended whisky.', 700, 40.00, 2010, '12 lat', 150.00, 1, 4, 8, 2, 4, 1, NULL, '2025-06-28 23:08:15'),
-	(9, 'Glenfiddich 15', 'Single malt whisky.', 700, 40.00, 2008, '15 lat', 200.00, 1, 4, 9, 2, 4, 2, NULL, '2025-06-28 23:08:15'),
-	(10, 'Yamazaki 12', 'Japońska whisky single malt.', 700, 43.00, 2012, '12 lat', 500.00, 1, 4, 10, 11, 4, 2, NULL, '2025-06-28 23:08:15'),
-	(11, 'Bombay Sapphire', 'Angielski gin.', 700, 40.00, 2022, NULL, 95.00, 1, 5, 11, 5, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(12, 'Tanqueray', 'London Dry Gin.', 700, 43.10, 2022, NULL, 110.00, 1, 5, 12, 5, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(13, 'Hendrick\'s', 'Gin z ogórkiem i różą.', 700, 41.40, 2022, NULL, 125.00, 1, 5, 13, 5, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(14, 'Bacardi Carta Blanca', 'Lekki biały rum.', 700, 37.50, 2022, NULL, 85.00, 1, 6, 14, 4, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(15, 'Captain Morgan Spiced Gold', 'Rum korzenny.', 700, 35.00, 2022, NULL, 90.00, 1, 6, 15, 4, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(16, 'Mount Gay Eclipse', 'Rum z Barbados.', 700, 40.00, 2022, NULL, 105.00, 1, 6, 16, 4, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(17, 'Jose Cuervo Especial', 'Tequila reposado.', 700, 38.00, 2022, NULL, 110.00, 1, 7, 17, 7, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(18, 'Patrón Silver', 'Tequila premium.', 700, 40.00, 2022, NULL, 300.00, 1, 7, 18, 7, 1, 5, NULL, '2025-06-28 23:08:15'),
-	(19, 'Moët & Chandon Imperial', 'Francuski szampan.', 750, 12.00, 2022, '3 lata', 250.00, 1, 2, 19, 8, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(20, 'Dom Pérignon Vintage 2013', 'Ekskluzywny szampan.', 750, 12.50, 2013, '7 lat', 600.00, 1, 2, 20, 8, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(21, 'Antinori Tignanello', 'Czerwone wino z Toskanii.', 750, 13.50, 2020, '2 lata', 450.00, 1, 2, 21, 9, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(22, 'Campo Viejo Reserva', 'Hiszpańskie Rioja.', 750, 13.50, 2018, '3 lata', 70.00, 1, 2, 22, 10, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(23, 'Hennessy VS', 'Francuski koniak.', 700, 40.00, 2020, '2 lata', 250.00, 1, 9, 23, 8, 1, 1, NULL, '2025-06-28 23:08:15'),
-	(24, 'Apis Dwójniak', 'Polski miód pitny półsłodki.', 750, 16.00, 2022, '1 rok', 50.00, 1, 11, 25, 1, 2, 5, NULL, '2025-06-28 23:08:15'),
-	(25, 'Żubrówka Biała', 'Wódka czysta inspirowana Puszczą Białowieską. Delikatna i łagodna w smaku.', 500, 40.00, 2025, NULL, 44.99, 1, 3, NULL, 1, NULL, NULL, 'https://example.com/images/zubrowka_biala.jpg', '2025-06-29 02:31:05'),
-	(26, 'Stock Prestige', 'Wysokiej jakości wódka klasy premium, destylowana z wyselekcjonowanych zbóż.', 700, 40.00, 2025, NULL, 64.99, 1, 3, NULL, 1, NULL, NULL, 'https://example.com/images/stock_prestige.jpg', '2025-06-29 02:31:05'),
-	(29, 'Baileys Irish Cream', 'Likier na bazie irlandzkiej whisky i śmietanki. Kremowy, słodki i aksamitny w smaku.', 700, 17.00, 2025, NULL, 69.99, 1, 8, NULL, 3, NULL, NULL, 'https://example.com/images/baileys.jpg', '2025-06-29 02:35:20'),
-	(30, 'Cointreau', 'Francuski likier pomarańczowy typu triple sec. Aromatyczny, z wyczuwalnym skórką pomarańczy.', 700, 40.00, 2024, NULL, 89.99, 1, 8, NULL, 8, NULL, NULL, 'https://example.com/images/cointreau.jpg', '2025-06-29 02:35:20');
+INSERT INTO `products` (`ProductID`, `Name`, `Description`, `VolumeML`, `AlcoholPercentage`, `Year`, `AgingDuration`, `Price`, `StockQuantity`, `Availability`, `CategoryID`, `ProducerID`, `CountryID`, `ProductionMethodID`, `AgingID`, `ImageURL`, `CreatedAt`) VALUES
+	(1, 'Piwo Raciborskie Klasyczne', 'Tradycyjne piwo jasne.', 500, 5.00, 2024, NULL, 5.50, 100, 1, 1, 1, 1, 2, 5, '/images/alcohol_placeholder.png', '0001-01-01 00:00:00'),
+	(2, 'Piwo Żywiec Jasne Pełne', 'Klasyczne piwo typu lager.', 500, 5.60, 2024, NULL, 5.90, 100, 1, 1, 2, 1, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(3, 'Piwo Raciborskie Twierdzowe', 'Mocniejsze piwo jasne.', 500, 6.20, 2024, NULL, 7.50, 100, 1, 1, 1, 1, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(4, 'Piwo Raciborskie Miodowe', 'Piwo z dodatkiem miodu.', 500, 5.60, 2024, NULL, 7.00, 100, 1, 1, 1, 1, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(5, 'Somersby Apple Cider', 'Orzeźwiający cydr jabłkowy.', 500, 4.50, 2024, NULL, 6.00, 100, 1, 10, 26, 5, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(6, 'Jack Daniel\'s Old No. 7', 'Tennessee whiskey.', 700, 40.00, 2022, '4 lata', 120.00, 100, 1, 4, 6, 4, 1, 3, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(7, 'Jameson Irish Whiskey', 'Delikatna irlandzka whiskey.', 700, 40.00, 2022, '3 lata', 100.00, 100, 1, 4, 7, 3, 4, 1, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(8, 'Johnnie Walker Black Label', '12-letnia blended whisky.', 700, 40.00, 2010, '12 lat', 150.00, 100, 1, 4, 8, 2, 4, 1, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(9, 'Glenfiddich 15', 'Single malt whisky.', 700, 40.00, 2008, '15 lat', 200.00, 100, 1, 4, 9, 2, 4, 2, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(10, 'Yamazaki 12', 'Japońska whisky single malt.', 700, 43.00, 2012, '12 lat', 500.00, 100, 1, 4, 10, 11, 4, 2, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(11, 'Bombay Sapphire', 'Angielski gin.', 700, 40.00, 2022, NULL, 95.00, 100, 1, 5, 11, 5, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(12, 'Tanqueray', 'London Dry Gin.', 700, 43.10, 2022, NULL, 110.00, 100, 1, 5, 12, 5, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(13, 'Hendrick\'s', 'Gin z ogórkiem i różą.', 700, 41.40, 2022, NULL, 125.00, 100, 1, 5, 13, 5, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(14, 'Bacardi Carta Blanca', 'Lekki biały rum.', 700, 37.50, 2022, NULL, 85.00, 100, 1, 6, 14, 4, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(15, 'Captain Morgan Spiced Gold', 'Rum korzenny.', 700, 35.00, 2022, NULL, 90.00, 100, 1, 6, 15, 4, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(16, 'Mount Gay Eclipse', 'Rum z Barbados.', 700, 40.00, 2022, NULL, 105.00, 100, 1, 6, 16, 4, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(17, 'Jose Cuervo Especial', 'Tequila reposado.', 700, 38.00, 2022, NULL, 110.00, 100, 1, 7, 17, 7, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(18, 'Patrón Silver', 'Tequila premium.', 700, 40.00, 2022, NULL, 300.00, 100, 1, 7, 18, 7, 1, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(19, 'Moët & Chandon Imperial', 'Francuski szampan.', 750, 12.00, 2022, '3 lata', 250.00, 100, 1, 2, 19, 8, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(20, 'Dom Pérignon Vintage 2013', 'Ekskluzywny szampan.', 750, 12.50, 2013, '7 lat', 600.00, 100, 1, 2, 20, 8, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(21, 'Antinori Tignanello', 'Czerwone wino z Toskanii.', 750, 13.50, 2020, '2 lata', 450.00, 100, 1, 2, 21, 9, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(22, 'Campo Viejo Reserva', 'Hiszpańskie Rioja.', 750, 13.50, 2018, '3 lata', 70.00, 100, 1, 2, 22, 10, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(23, 'Hennessy VS', 'Francuski koniak.', 700, 40.00, 2020, '2 lata', 250.00, 100, 1, 9, 23, 8, 1, 1, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(24, 'Apis Dwójniak', 'Polski miód pitny półsłodki.', 750, 16.00, 2022, '1 rok', 50.00, 100, 1, 11, 25, 1, 2, 5, '/images/alcohol_placeholder.png', '2025-06-28 23:08:15'),
+	(25, 'Żubrówka Biała', 'Wódka czysta inspirowana Puszczą Białowieską. Delikatna i łagodna w smaku.', 500, 40.00, 2025, NULL, 44.99, 100, 1, 3, 5, 1, 10, 1, '/images/alcohol_placeholder.png', '2025-06-29 02:31:05'),
+	(26, 'Stock Prestige', 'Wysokiej jakości wódka klasy premium, destylowana z wyselekcjonowanych zbóż.', 700, 40.00, 2025, NULL, 64.99, 100, 1, 3, 12, 1, 10, 1, '/images/alcohol_placeholder.png', '2025-06-29 02:31:05'),
+	(29, 'Baileys Irish Cream', 'Likier na bazie irlandzkiej whisky i śmietanki. Kremowy, słodki i aksamitny w smaku.', 700, 17.00, 2025, NULL, 69.99, 100, 1, 8, 35, 3, 11, 1, '/images/alcohol_placeholder.png', '2025-06-29 02:35:20'),
+	(30, 'Cointreau', 'Francuski likier pomarańczowy typu triple sec. Aromatyczny, z wyczuwalnym skórką pomarańczy.', 700, 40.00, 2024, NULL, 89.99, 100, 1, 8, 36, 8, 12, 1, '/images/alcohol_placeholder.png', '2025-06-29 02:35:20');
 
 -- Zrzut struktury tabela alcoholshop.reviews
 CREATE TABLE IF NOT EXISTS `reviews` (
@@ -467,7 +470,7 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`),
   CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`),
   CONSTRAINT `reviews_chk_1` CHECK ((`Rating` between 1 and 5))
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.reviews: ~8 rows (około)
 INSERT INTO `reviews` (`ReviewID`, `ProductID`, `UserID`, `Rating`, `Comment`, `CreatedAt`) VALUES
@@ -487,17 +490,18 @@ CREATE TABLE IF NOT EXISTS `users` (
   `PasswordHash` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `FirstName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `LastName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `BirthDate` date DEFAULT NULL,
   `Role` enum('Admin','Client') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `CreatedAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Zrzucanie danych dla tabeli alcoholshop.users: ~3 rows (około)
-INSERT INTO `users` (`UserID`, `Email`, `PasswordHash`, `FirstName`, `LastName`, `Role`, `CreatedAt`) VALUES
-	(1, 'jan.kowalski@example.com', 'hashed_password_1', 'Jan', 'Kowalski', 'Client', '2025-06-28 23:29:24'),
-	(2, 'anna.nowak@example.com', 'hashed_password_2', 'Anna', 'Nowak', 'Client', '2025-06-28 23:29:24'),
-	(3, 'admin@example.com', 'hashed_password_admin', 'Admin', 'Adminowski', 'Admin', '2025-06-29 02:42:31');
+INSERT INTO `users` (`UserID`, `Email`, `PasswordHash`, `FirstName`, `LastName`, `BirthDate`, `Role`, `CreatedAt`) VALUES
+	(1, 'jan.kowalski@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Jan', 'Kowalski', NULL, 'Client', '2025-06-28 23:29:24'),
+	(2, 'anna.nowak@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Anna', 'Nowak', NULL, 'Client', '2025-06-28 23:29:24'),
+	(3, 'admin@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Admin', 'Adminowski', NULL, 'Admin', '2025-06-29 02:42:31');
 
 -- Zrzut struktury widok alcoholshop.activeproductsview
 -- Usuwanie tabeli tymczasowej i tworzenie ostatecznej struktury WIDOKU
