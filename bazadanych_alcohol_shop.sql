@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS `logs` (
   CONSTRAINT `logs_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `users` (`UserID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.logs: ~3 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.logs: ~0 rows (około)
 INSERT INTO `logs` (`LogID`, `UserID`, `Action`, `Description`, `CreatedAt`) VALUES
 	(1, 3, 'Edycja postu', 'Zedytowano post o ID: 3, Nazwa: Historia ginu — od lekarstwa do koktajli', '2025-07-18 00:08:28'),
 	(2, 3, 'Edycja postu', 'Zedytowano post o ID: 1, Nazwa: Sztuka degustacji whisky — poradnik dla początkujących', '2025-07-18 00:08:35'),
@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `orderitems` (
   CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.orderitems: ~3 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.orderitems: ~5 rows (około)
 INSERT INTO `orderitems` (`OrderItemID`, `OrderID`, `ProductID`, `Quantity`, `UnitPrice`) VALUES
 	(1, 1, 1, 1, 120.50),
 	(2, 2, 2, 6, 10.50),
@@ -287,7 +287,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   CONSTRAINT `orders_ibfk_4` FOREIGN KEY (`PaymentMethodID`) REFERENCES `paymentmethods` (`PaymentMethodID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Zrzucanie danych dla tabeli alcoholshop.orders: ~3 rows (około)
+-- Zrzucanie danych dla tabeli alcoholshop.orders: ~5 rows (około)
 INSERT INTO `orders` (`OrderID`, `UserID`, `Email`, `Name`, `Address`, `StatusID`, `DeliveryMethodID`, `PaymentMethodID`, `TotalAmount`, `CreatedAt`) VALUES
 	(1, 1, 'jan.kowalski@example.com', 'Jan Kowalski', 'ul. Mickiewicza 10, Warszawa', 1, 1, 1, 120.50, '2025-06-20 10:15:00'),
 	(2, 2, 'anna.nowak@example.com', 'Anna Nowak', 'ul. Piękna 5, Kraków', 2, 2, 2, 240.99, '2025-06-25 14:30:00'),
@@ -499,9 +499,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Zrzucanie danych dla tabeli alcoholshop.users: ~3 rows (około)
 INSERT INTO `users` (`UserID`, `Email`, `PasswordHash`, `FirstName`, `LastName`, `BirthDate`, `Role`, `CreatedAt`) VALUES
-	(1, 'jan.kowalski@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Jan', 'Kowalski', NULL, 'Client', '2025-06-28 23:29:24'),
-	(2, 'anna.nowak@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Anna', 'Nowak', NULL, 'Client', '2025-06-28 23:29:24'),
-	(3, 'admin@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Admin', 'Adminowski', NULL, 'Admin', '2025-06-29 02:42:31');
+	(1, 'klient@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Jan', 'Kowalski', '2000-07-18', 'Client', '2025-06-28 23:29:24'),
+	(2, 'klient2@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Anna', 'Nowak', '2000-07-18', 'Client', '2025-06-28 23:29:24'),
+	(3, 'admin@example.com', 'AQAAAAIAAYagAAAAEJiq1GtdGACF19xDJRMQw0z+Nj/V6UbN+SG/CJHE4GKf9DZmssf9Ic5//shyYRuwCQ==', 'Admin', 'Adminowski', '2000-07-18', 'Admin', '2025-06-29 02:42:31');
 
 -- Zrzut struktury widok alcoholshop.activeproductsview
 -- Usuwanie tabeli tymczasowej i tworzenie ostatecznej struktury WIDOKU
