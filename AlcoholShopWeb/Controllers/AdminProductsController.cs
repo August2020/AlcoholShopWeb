@@ -66,6 +66,7 @@ namespace AlcoholShopWeb.Controllers
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                await LogAction("Stworzono produkt", $"Zmieniono produkt o Nazwie: {product.Name}");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -106,6 +107,7 @@ namespace AlcoholShopWeb.Controllers
                 {
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    await LogAction("Edycja produktu", $"Zmieniono produkt o ID: {product.ProductID}, Nazwa: {product.Name}");
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -126,34 +128,50 @@ namespace AlcoholShopWeb.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            var post = await _context.BlogPosts
-                .Include(p => p.BlogCategory)
-                .FirstOrDefaultAsync(p => p.PostID == id);
+            if (id == null) return NotFound();
 
-            if (post == null)
-                return NotFound();
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Producer)
+                .FirstOrDefaultAsync(m => m.ProductID == id);
 
-            return View(post);
+            if (product == null) return NotFound();
+
+            return View(product);
         }
 
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int ProductID)
         {
-            var post = await _context.BlogPosts
-                .Include(p => p.BlogPostTags)
-                .FirstOrDefaultAsync(p => p.PostID == id);
-
-            if (post != null)
+            var product = await _context.Products.FindAsync(ProductID);
+            if (product != null)
             {
-                _context.BlogPostTags.RemoveRange(post.BlogPostTags);
-                _context.BlogPosts.Remove(post);
+                _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
+                await LogAction("Usunięcie produktu", $"Usunięto produkt o ID: {product.ProductID}, Nazwa: {product.Name}");
             }
 
             return RedirectToAction(nameof(Index));
         }
+
+        private async Task LogAction(string action, string? description = null)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            var log = new Log
+            {
+                UserID = userId,
+                Action = action,
+                Description = description,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Logs.Add(log);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

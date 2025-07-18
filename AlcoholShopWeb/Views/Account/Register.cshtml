@@ -1,4 +1,4 @@
-@model AlcoholShopWeb.Models.User
+@model AlcoholShopWeb.Models.ViewModels.RegisterViewModel
 
 @{
     ViewData["Title"] = "Rejestracja";
@@ -12,26 +12,41 @@
     <div class="mb-3">
         <label>Email</label>
         <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Imię</label>
         <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Nazwisko</label>
         <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label for="BirthDate">Data urodzenia</label>
-        <input type="date" name="BirthDate" class="form-control" value="@Model.BirthDate?.ToString("yyyy-MM-dd")" />
+        <label>Data urodzenia</label>
+        <input asp-for="BirthDate" type="date" class="form-control" value="@(DateTime.Today)" />
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label>Hasło</label>
-        <input name="password" type="password" class="form-control" />
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Powtórz hasło</label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="alert alert-warning">
+        Rejestrując się, potwierdzasz, że masz ukończone 18 lat.
     </div>
 
     <button type="submit" class="btn btn-success">Zarejestruj</button>

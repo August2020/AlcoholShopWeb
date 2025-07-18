@@ -21,7 +21,7 @@ namespace AlcoholShopWeb.Models
         [Required(ErrorMessage = "Nazwisko jest wymagane")]
         public string LastName { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [BindNever]
         public string Role { get; set; } // 'Admin' lub 'Client'

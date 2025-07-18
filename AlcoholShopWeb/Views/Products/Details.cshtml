@@ -1,88 +1,85 @@
 ﻿@model AlcoholShopWeb.Models.Product
 
-<h2 class="mt-4">@Model.Name</h2>
+<!-- Hero sekcja -->
+<div class="row my-5 align-items-center">
+    <div class="col-md-5">
+        <img src="@Model.ImageURL" class="img-fluid rounded" alt="@Model.Name" />
+    </div>
+    <div class="col-md-7">
+        <h2>@Model.Name</h2>
+        <p class="lead text-muted">@Model.Description</p>
+        <h4 class="text-primary">@Model.Price.ToString("0.00") zł</h4>
 
-<div class="card">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img src="@Model.ImageURL" class="img-fluid rounded-start" alt="@Model.Name" onerror="this.src='/images/noimage.png';">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h4><strong>Opis:</strong></h4>
-                <p class="card-text"> @Model.Description</p>
-                <h4><strong>Dane produktu:</strong></h4>
-                <p><strong>Kategoria:</strong> @Model.Category?.Name</p>
-                <p><strong>Producent:</strong> @Model.Producer?.Name</p>
-                <p><strong>Kraj:</strong> @Model.Country?.Name</p>
-                <p><strong>Metoda produkcji:</strong> @Model.ProductionMethod?.Name</p>
-                <p><strong>Starzenie:</strong> @Model.Aging?.Name (@Model.AgingDuration)</p>
-                <p><strong>Pojemność:</strong> @Model.VolumeML ml</p>
-                <p><strong>Alkohol:</strong> @Model.AlcoholPercentage %</p>
-                <p><strong>Cena:</strong> @Model.Price zł</p>
-                <p><strong>Dostępność:</strong> @(Model.Availability == true ? "Tak" : "Nie")</p>
-
-                <a asp-action="Index" class="btn btn-secondary">Powrót</a>
-            </div>
-        </div>
+        @if (Model.Availability)
+        {
+            var userId = Context.Session.GetString("UserId");
+            if (!string.IsNullOrEmpty(userId))
+            {
+                <form asp-controller="Cart" asp-action="AddItem" method="post" class="mt-3">
+                    <input type="hidden" name="productId" value="@Model.ProductID" />
+                    <div class="input-group" style="max-width: 250px;">
+                        <input type="number" name="quantity" class="form-control" min="1" value="1" required />
+                        <button type="submit" class="btn btn-success">Dodaj do koszyka</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-warning mt-3">Zaloguj się, aby dodać do koszyka.</div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-danger mt-3">Produkt niedostępny</div>
+        }
     </div>
 </div>
 
-@if (Model.Availability == true)
+<hr class="my-5" />
+
+<!-- Producent -->
+@if (Model.Producer != null)
 {
-    var userId = Context.Session.GetString("UserId");
-
-    if (!string.IsNullOrEmpty(userId))
-    {
-        <form asp-controller="Cart" asp-action="AddItem" method="post" class="mt-4">
-            <input type="hidden" name="productId" value="@Model.ProductID" />
-            <div class="input-group mb-3" style="max-width: 250px;">
-                <input type="number" name="quantity" class="form-control" min="1" value="1" required />
-                <button type="submit" class="btn btn-success">Dodaj do koszyka</button>
-            </div>
-        </form>
-    }
-    else
-    {
-        <div class="alert alert-warning mt-3">Zaloguj się, aby dodać do koszyka.</div>
-    }
-}
-else
-{
-    <div class="alert alert-danger mt-3">Produkt niedostępny</div>
-}
-
-
-@if (Context.Session.GetString("UserId") != null)
-{
-    <form asp-action="AddReview" method="post" class="mt-4">
-        <input type="hidden" name="productId" value="@Model.ProductID" />
-
-        <div class="mb-2">
-            <label for="comment">Twoja opinia:</label>
-            <textarea name="comment" class="form-control" rows="3" required></textarea>
+    <div class="row align-items-center mb-5">
+        <div class="col-md-12">
+            <img src="/images/producer.jpg" alt="@Model.Producer.Name" class="img-fluid rounded" />
         </div>
-
-        <div class="mb-3">
-            <label for="rating">Ocena:</label>
-            <select name="rating" class="form-select" style="max-width: 160px;" required>
-                <option value="5">⭐⭐⭐⭐⭐</option>
-                <option value="4">⭐⭐⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
-                <option value="2">⭐⭐</option>
-                <option value="1">⭐</option>
-            </select>
+        <div class="col-md-12">
+            <h3>O producencie: @Model.Producer.Name</h3>
+            <p>@Model.Producer.Description</p>
         </div>
+    </div>
+}
 
-        <button type="submit" class="btn btn-outline-primary">Dodaj recenzję</button>
-    </form>
-}
-else
+<!-- Metoda produkcji -->
+@if (Model.ProductionMethod != null)
 {
-    <div class="alert alert-info">Zaloguj się, aby dodać recenzję.</div>
+    <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-12">
+            <img src="/images/production.jpg" alt="@Model.ProductionMethod.Name" class="img-fluid rounded" />
+        </div>
+        <div class="col-md-12">
+            <h3>Metoda produkcji: @Model.ProductionMethod.Name</h3>
+            <p>@Model.ProductionMethod.Description</p>
+        </div>
+    </div>
 }
+
+<!-- Szczegóły produktu -->
+<h4 class="mb-3">Szczegóły techniczne</h4>
+<table class="table table-striped">
+    <tr><th>Kategoria</th><td>@Model.Category?.Name</td></tr>
+    <tr><th>Kraj</th><td>@Model.Country?.Name</td></tr>
+    <tr><th>Rok</th><td>@Model.Year</td></tr>
+    <tr><th>Starzenie</th><td>@Model.Aging?.Name (@Model.AgingDuration)</td></tr>
+    <tr><th>Pojemność</th><td>@Model.VolumeML ml</td></tr>
+    <tr><th>Alkohol</th><td>@Model.AlcoholPercentage %</td></tr>
+    <tr><th>Dostępność</th><td>@(Model.Availability ? "Tak" : "Nie")</td></tr>
+</table>
 
 <hr />
+
+<!-- Recenzje i dodawanie recenzji -->
 <h4>Recenzje</h4>
 
 @if (Model.Reviews.Any())
@@ -113,3 +110,28 @@ else
     <p>Brak recenzji.</p>
 }
 
+@if (Context.Session.GetString("UserId") != null)
+{
+    <form asp-action="AddReview" method="post" class="mt-4">
+        <input type="hidden" name="productId" value="@Model.ProductID" />
+        <div class="mb-2">
+            <label>Twoja opinia:</label>
+            <textarea name="comment" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Ocena:</label>
+            <select name="rating" class="form-select" style="max-width: 160px;" required>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Dodaj recenzję</button>
+    </form>
+}
+else
+{
+    <div class="alert alert-info">Zaloguj się, aby dodać recenzję.</div>
+}

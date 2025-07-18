@@ -1,0 +1,25 @@
+﻿@model List<AlcoholShopWeb.Models.Log>
+
+<h2>Logi systemowe</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Użytkownik</th>
+            <th>Akcja</th>
+            <th>Opis</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.CreatedAt.ToString("g")</td>
+                <td>@(log.User != null ? $"{log.User.FirstName} {log.User.LastName}" : "Nieznany")</td>
+                <td>@log.Action</td>
+                <td>@log.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>

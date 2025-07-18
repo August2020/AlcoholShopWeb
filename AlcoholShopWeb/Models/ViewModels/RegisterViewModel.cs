@@ -5,6 +5,16 @@ namespace AlcoholShopWeb.Models.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime BirthDate { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 

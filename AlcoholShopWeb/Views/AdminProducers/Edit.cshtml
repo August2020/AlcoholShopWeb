@@ -12,6 +12,10 @@
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" />
+        <div class="mb-3 mt-3">
+            <label asp-for="Description" class="form-label">Opis</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 

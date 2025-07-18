@@ -1,5 +1,6 @@
 using AlcoholShopWeb.Data;
 using AlcoholShopWeb.Models;
+using AlcoholShopWeb.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -18,28 +19,47 @@ namespace AlcoholShopWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            return View(new RegisterViewModel());
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Register(User model, string password)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+            if ((DateTime.Now - model.BirthDate).TotalDays < 18 * 365)
             {
-                ModelState.AddModelError("", "Użytkownik z tym e-mailem już istnieje.");
+                ModelState.AddModelError("BirthDate", "Musisz mieć ukończone 18 lat.");
                 return View(model);
             }
 
-            model.PasswordHash = _passwordHasher.HashPassword(model, password);
-            model.Role = "Client";
-            model.CreatedAt = DateTime.UtcNow;
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+            {
+                ModelState.AddModelError("Email", "Użytkownik z tym e-mailem już istnieje.");
+                return View(model);
+            }
 
-            _context.Users.Add(model);
+            var user = new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                BirthDate = model.BirthDate,
+                Role = "Client",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, model.Password);
+
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            HttpContext.Session.SetInt32("UserId", model.UserID);
-            HttpContext.Session.SetString("UserRole", model.Role);
-            HttpContext.Session.SetString("UserName", model.FirstName);
+            HttpContext.Session.SetInt32("UserId", user.UserID);
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserName", user.FirstName);
 
             return RedirectToAction("Index", "Home");
         }
@@ -107,20 +127,5 @@ namespace AlcoholShopWeb.Controllers
             TempData["Success"] = "Dane zostały zaktualizowane";
             return RedirectToAction("Profile");
         }
-
-        public async Task<IActionResult> Orders()
-        {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null) return NotFound();
-
-            var orders = await _context.Orders
-                .Where(o => o.UserID == userId)
-                .Include(o => o.Status)
-                .Include(o => o.OrderItems).ThenInclude(i => i.Product)
-                .ToListAsync();
-
-            return View(orders);
-        }
-
     }
 }

@@ -27,10 +27,10 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Products" asp-action="Index">Produkty</a>
+                            <a class="nav-link text-secondary" asp-controller="Products" asp-action="Index">Produkty</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Blog" asp-action="Index">Blog</a>
+                            <a class="nav-link text-secondary" asp-controller="Blog" asp-action="Index">Blog</a>
                         </li>
                         @if (userRole == "Admin")
                         {
@@ -44,6 +44,7 @@
                                     <li><a class="dropdown-item" asp-controller="AdminProductionMethods" asp-action="Index">Metody produkcji</a></li>
                                     <li><a class="dropdown-item" asp-controller="AdminAging" asp-action="Index">Starzenie</a></li>
                                     <li><a class="dropdown-item" asp-controller="AdminBlog" asp-action="Index">Blog</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AdminLogs" asp-action="Logs">Logi</a></li>
                                 </ul>
                             </li>
                         }
@@ -53,7 +54,7 @@
                         @if (Context.Session.GetString("UserId") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Cart" asp-action="Index" asp-route-userId="@userId">Koszyk</a>
+                                <a class="nav-link text-secondary" asp-controller="Cart" asp-action="Index" asp-route-userId="@userId">Koszyk</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-secondary" href="#" id="userMenu" role="button" data-bs-toggle="dropdown">
@@ -61,7 +62,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Edytuj profil</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Orders">Moje zamówienia</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Orders" asp-action="Orders">Moje zamówienia</a></li>
                                     <li>
                                         <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                             <button class="dropdown-item" type="submit">Wyloguj</button>
@@ -85,18 +86,16 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container mb-5">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted mt-5">
-        @*
         <div class="container">
-            &copy; 2025 - AlcoholShopWeb - <a asp-controller="Home" asp-action="Privacy">Prywatność</a>
+            &copy; 2025 - Szymon Augustyn
          </div>
-        *@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

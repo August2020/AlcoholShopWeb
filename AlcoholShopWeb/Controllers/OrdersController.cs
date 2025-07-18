@@ -15,6 +15,20 @@ namespace AlcoholShopWeb.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Orders()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null) return NotFound();
+
+            var orders = await _context.Orders
+                .Where(o => o.UserID == userId)
+                .Include(o => o.Status)
+                .Include(o => o.OrderItems).ThenInclude(i => i.Product)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {

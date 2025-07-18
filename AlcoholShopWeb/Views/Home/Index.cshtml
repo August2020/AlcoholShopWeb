@@ -1,8 +1,54 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Strona główna";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="row align-items-center bg-dark text-white p-4 rounded shadow-sm" style="background-image: url('/images/hero-bottles.jpg'); background-position:center;">
+        <div class="col-md-6">
+            <h1 class="display-5 fw-bold">Witamy w AlcoholShop</h1>
+            <p class="lead">Ekskluzywna kolekcja alkoholi z całego świata. Kupuj najlepsze trunki w najlepszych cenach.</p>
+            <a href="/Products" class="btn btn-primary btn-lg me-2">Zobacz produkty</a>
+            <a href="/Blog" class="btn btn-outline-light btn-lg">Przeczytaj bloga</a>
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Polecane alkohole</h2>
+        <div class="row">
+            @foreach (var product in Model.FeaturedProducts)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="@product.ImageURL" class="card-img-top" alt="@product.Name">
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-muted">@product.Category?.Name</p>
+                            <p class="card-text fw-bold">@product.Price zł</p>
+                            <a href="/Products/Details/@product.ProductID" class="btn btn-primary">Zobacz</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <hr class="my-5" />
+
+        <h2 class="mb-4">Ostatnie wpisy na blogu</h2>
+        <div class="row">
+            @foreach (var blog in Model.LatestBlogPosts)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-secondary">
+                        <div class="card-body">
+                            <h5 class="card-title">@blog.Title</h5>
+                            <p class="card-text">@blog.Content?.Substring(0, Math.Min(blog.Content.Length, 100))...</p>
+                            <a href="/Blog/Details/@blog.PostID" class="btn btn-outline-dark">Czytaj więcej</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>

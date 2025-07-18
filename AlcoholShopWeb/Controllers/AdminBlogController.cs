@@ -45,6 +45,7 @@ namespace AlcoholShopWeb.Controllers
                     _context.BlogPostTags.Add(new BlogPostTag { PostID = post.PostID, TagID = tagId });
 
                 await _context.SaveChangesAsync();
+                await LogAction("Stworzono post", $"Stworzony nowy post o Nazwie: {post.Title}");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -83,6 +84,8 @@ namespace AlcoholShopWeb.Controllers
                     _context.BlogPostTags.Add(new BlogPostTag { PostID = post.PostID, TagID = tagId });
 
                 await _context.SaveChangesAsync();
+
+                await LogAction("Edycja postu", $"Zedytowano post o ID: {post.PostID}, Nazwa: {post.Title}");
                 return RedirectToAction(nameof(Index));
             }
 
@@ -106,8 +109,26 @@ namespace AlcoholShopWeb.Controllers
                 _context.BlogPosts.Remove(post);
 
                 await _context.SaveChangesAsync();
+                await LogAction("Usunięcie postu", $"Usunięto post o ID: {post.PostID}, Nazwa: {post.Title}");
             }
             return RedirectToAction(nameof(Index));
         }
+
+        private async Task LogAction(string action, string? description = null)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            var log = new Log
+            {
+                UserID = userId,
+                Action = action,
+                Description = description,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Logs.Add(log);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
